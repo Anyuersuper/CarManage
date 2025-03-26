@@ -174,7 +174,7 @@ public class subop {
         int uid = cmusrMapper.selectByPrimaryKey(username).getUid();
         Instant now = Instant.now();
 		long timestamp = now.toEpochMilli();
-        String subid = "GD" + timestamp;
+        String subid = "SQ" + timestamp;
 
         System.out.print( subid);
         

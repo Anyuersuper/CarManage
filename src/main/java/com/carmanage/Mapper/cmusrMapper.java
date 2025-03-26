@@ -18,4 +18,6 @@ public interface cmusrMapper {
     int updateByPrimaryKey(cmusr row);
     
     List<cmusr> selectAll();
+    
+    cmusr selectByUid(Integer uid);
 }

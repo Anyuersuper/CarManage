@@ -250,6 +250,7 @@
                 <tr>
                     <th>申请ID</th>
                     <th>用户ID</th>
+					<th>车牌号</th>
                     <th>申请内容</th>
                     <th>状态</th>
                     <th id="operation-column" >操作</th> <!-- 操作列默认隐藏 -->
@@ -268,183 +269,185 @@
     </div>
 
     <script>
-    // 每页显示10条数据
-    const itemsPerPage = 10;
-    let currentPage = 1;
-    let filteredApplications = []; // 存储过滤后的申请数据
-    let allApplications = []; // 存储所有申请数据，便于搜索
+		// 每页显示10条数据
+		const itemsPerPage = 10;
+		let currentPage = 1;
+		let filteredApplications = []; // 存储过滤后的申请数据
+		let allApplications = []; // 存储所有申请数据，便于搜索
 
-	function loadApplications(page) {
-	    $.get("/cmsub/mysub", function(data) {
-	        allApplications = data; // 存储所有申请数据
-	        filterApplications(); // 根据当前搜索条件过滤申请
-	        let start = (page - 1) * itemsPerPage;
-	        let end = start + itemsPerPage;
-	        let applicationsToShow = filteredApplications.slice(start, end);
+		function loadApplications(page) {
+		    $.get("/cmsub/mysub", function(data) {
+		        allApplications = data; // 存储所有申请数据
+		        filterApplications(); // 根据当前搜索条件过滤申请
+		        let start = (page - 1) * itemsPerPage;
+		        let end = start + itemsPerPage;
+		        let applicationsToShow = filteredApplications.slice(start, end);
 
-	        let tbody = $("#application-table tbody");
-	        tbody.empty();
-	        applicationsToShow.forEach(function(application) {
-	            let content = application.content.length > 100 ? application.content.substring(0, 100) + '...' : application.content;
-	            let row = `<tr>
-	                <td>${application.subid}</td>
-	                <td>${application.uid}</td>
-	                <td class="content">${content}</td>
-	                <td>
-	                    <select>
-	                        <option ${application.status === "审批中" ? "selected" : ""}>审批中</option>
-	                        <option ${application.status === "通过" ? "selected" : ""}>通过</option>
-	                        <option ${application.status === "未通过" ? "selected" : ""}>未通过</option>
-	                        <option ${application.status === "打回" ? "selected" : ""}>打回</option>
-	                    </select>
-	                </td>
-	                <td>
-						<div class="button-container">
-						            <button class="btn btn-view" onclick="viewApplication('${application.subid}')">查看</button>
-						            ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.subid}')">修改</button>` : ''}
-						</div>
-	                </td>
-	            </tr>`;
+		        let tbody = $("#application-table tbody");
+		        tbody.empty();
+		        applicationsToShow.forEach(function(application) {
+		            let content = application.content; // 直接使用内容
+		            let status = application.status;  // 直接使用状态
 
-	            tbody.append(row);
-	        });
+		            let row = `<tr>
+		                <td>${application.subid}</td>
+		                <td>${application.uid}</td>
+		                <td>${application.carid}</td>
+		                <td>
+		                    <select class="content-select">
+		                        <option ${content === "车灯损坏" ? "selected" : ""}>车灯损坏</option>
+		                        <option ${content === "后视镜损坏" ? "selected" : ""}>后视镜损坏</option>
+		                        <option ${content === "保险杠损坏" ? "selected" : ""}>保险杠损坏</option>
+		                        <option ${content === "轮胎损坏" ? "selected" : ""}>轮胎损坏</option>
+		                        <option ${content === "座椅损坏" ? "selected" : ""}>座椅损坏</option>
+		                        <option ${content === "车漆刮擦" ? "selected" : ""}>车漆刮擦</option>
+		                    </select>
+		                </td>
+		                <td>
+		                    <select class="status-select">
+		                        <option ${status === "审批中" ? "selected" : ""}>审批中</option>
+		                        <option ${status === "未通过" ? "selected" : ""}>未通过</option>
+		                        <option ${status === "已通过" ? "selected" : ""}>已通过</option>
+		                    </select>
+		                </td>
+		                <td>
+		                    <div class="button-container">
+		                        <button class="btn btn-view" onclick="viewApplication('${application.subid}')">查看</button>
+		                        ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.subid}')">修改</button>` : ''}
+		                    </div>
+		                </td>
+		            </tr>`;
 
-	        // 添加点击事件来显示完整内容
-	        $(".content").click(function() {
-	            let content = $(this).text().trim(); // 获取该行的申请内容
-	            alert(content); // 弹出提示框显示完整的内容
-	        });
+		            tbody.append(row);
+		        });
 
-	        updatePagination(page);
-	    });
-	}
+		        updatePagination(page);
+		    });
+		}
 
+		// 查看按钮点击事件，跳转到 subdetail.html 页面
+		function viewApplication(subid) {
+		    console.log("查看按钮被点击，subid:", subid);
+		    window.location.href = `/subdetail.html?subid=${subid}`;
+		}
 
-	// 查看按钮点击事件，跳转到 subdetail.html 页面
-	function viewApplication(subid) {
-		console.log("查看按钮被点击，subid:", subid);
-	    window.location.href = `/subdetail.html?subid=${subid}`;
-	}
+		// 根据搜索条件过滤申请数据
+		function filterApplications() {
+		    const searchField = $("#search-field").val(); // 获取选择的字段
+		    const searchText = $("#search-input").val().toLowerCase(); // 获取输入框的内容
 
+		    filteredApplications = allApplications.filter(function(application) {
+		        return application[searchField] && application[searchField].toString().toLowerCase().includes(searchText);
+		    });
+		}
 
+		// 更新分页按钮状态
+		function updatePagination(page) {
+		    const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
+		    $("#prev-page").toggleClass("disabled", page === 1);
+		    $("#next-page").toggleClass("disabled", page === totalPages);
+		}
 
+		// 搜索申请
+		function searchApplications() {
+		    filterApplications(); // 每次搜索时过滤数据
+		    currentPage = 1; // 搜索后从第一页开始
+		    loadApplications(currentPage);
+		}
 
+		// 分页按钮的点击事件
+		function changePage(direction) {
+		    currentPage += direction;
+		    loadApplications(currentPage);
+		}
 
+		// 编辑申请记录
+		function editApplication(subid) {
+		    // 获取当前行的 content 和 status
+		    let row = event.target.closest('tr');
+		    let contentSelect = row.querySelector('.content-select');
+		    let statusSelect = row.querySelector('.status-select');
 
-    // 根据搜索条件过滤申请数据
-    function filterApplications() {
-        const searchField = $("#search-field").val(); // 获取选择的字段
-        const searchText = $("#search-input").val().toLowerCase(); // 获取输入框的内容
+		    let newContent = contentSelect.value; // 获取选择的内容
+		    let newStatus = statusSelect.value; // 获取选择的状态
 
-        filteredApplications = allApplications.filter(function(application) {
-            return application[searchField] && application[searchField].toString().toLowerCase().includes(searchText);
-        });
-    }
+		    // 发送更新请求到后端
+		    $.ajax({
+		        url: '/cmsub/update', // 更新接口
+		        type: 'POST',
+		        contentType: 'application/json',
+		        data: JSON.stringify({
+		            subid: subid,
+		            content: newContent,  // 发送选择的内容
+		            status: newStatus     // 发送选择的状态
+		        }),
+		        success: function(response) {
+		            alert("申请记录已更新！");
+		            loadApplications(currentPage); // 刷新表格数据
+		        },
+		        error: function() {
+		            alert("更新失败，请重试！");
+		        }
+		    });
+		}
 
-    // 更新分页按钮状态
-    function updatePagination(page) {
-        const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
-        $("#prev-page").toggleClass("disabled", page === 1);
-        $("#next-page").toggleClass("disabled", page === totalPages);
-    }
+		// 退出登录功能
+		function logout() {
+		    document.cookie = "isLoggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+		    document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+		    window.location.href = "/index.html"; // 跳转到登录页面
+		}
 
-    // 搜索申请
-    function searchApplications() {
-        filterApplications(); // 每次搜索时过滤数据
-        currentPage = 1; // 搜索后从第一页开始
-        loadApplications(currentPage);
-    }
+		// 显示用户问候信息
+		function showGreeting() {
+		    let cookies = document.cookie.split('; ');
+		    let username = cookies.find(cookie => cookie.startsWith('username='));
 
-    
+		    if (username) {
+		        let usernameValue = username.split('=')[1];
+		        $("#greeting").text(`${usernameValue}，你好！`);
+		    }
+		}
 
-    // 分页按钮的点击事件
-    function changePage(direction) {
-        currentPage += direction;
-        loadApplications(currentPage);
-    }
+		async function checkLogin() {
+		    let cookies = document.cookie.split('; ');
+		    let isLoggedIn = cookies.find(cookie => cookie.startsWith('isLoggedIn='));
+		    let usernameCookie = cookies.find(cookie => cookie.startsWith('username='));
 
-    // 编辑申请记录
-	function editApplication(subid) {
-	    // 获取当前行的 status
-	    let row = event.target.closest('tr');
-	    let selectElement = row.querySelector('select');
-	    let newStatus = selectElement.value; // 获取选择的状态
+		    if (!isLoggedIn) {
+		        window.location.href = "/index.html";
+		    } else {
+		        let usernameValue = usernameCookie ? usernameCookie.split('=')[1] : null;
 
-	    // 发送更新请求到后端
-	    $.ajax({
-	        url: '/cmsub/update', // 更新接口
-	        type: 'POST',
-	        contentType: 'application/json',
-	        data: JSON.stringify({
-	            subid: subid,
-	            status: newStatus  // 发送选择的状态
-	        }),
-	        success: function(response) {
-	            alert("申请记录已更新！");
-	            loadApplications(currentPage); // 刷新表格数据
-	        },
-	        error: function() {
-	            alert("更新失败，请重试！");
-	        }
-	    });
-	}
+		        try {
+		            let user = await fetch(`/cmusr/search/${usernameValue}`).then(response => response.json());
 
+		            // 判断权限，权限为 4 或 2 的用户可以看到修改按钮
+		            if (user.authority === 4 || user.authority === 2) {
+		                if (user.authority === 4) {
+		                    document.getElementById('user-management-link').style.display = "inline-block";
+		                }
+		                window.canEdit = true;  // 设置 canEdit 为 true，表示有权限编辑
+		            } else {
+		                window.canEdit = false;  // 没有权限编辑
+		            }
 
-    // 退出登录功能
-    function logout() {
-        document.cookie = "isLoggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-        window.location.href = "/index.html"; // 跳转到登录页面
-    }
+		            // 权限检查完成后，调用页面加载函数
+		            loadApplications(currentPage); // 确保在权限检查后加载应用数据
 
-    // 显示用户问候信息
-    function showGreeting() {
-        let cookies = document.cookie.split('; ');
-        let username = cookies.find(cookie => cookie.startsWith('username='));
+		        } catch (error) {
+		            console.error('获取用户信息失败:', error);
+		        }
+		    }
+		}
 
-        if (username) {
-            let usernameValue = username.split('=')[1];
-            $("#greeting").text(`${usernameValue}，你好！`);
-        }
-    }
+		// 页面加载完成后检查登录状态、显示问候信息，并加载申请数据
+		$(document).ready(function() {
+		    checkLogin();
+		    showGreeting();
+		    loadApplications(currentPage);
+		});
 
-	async function checkLogin() {
-	    let cookies = document.cookie.split('; ');
-	    let isLoggedIn = cookies.find(cookie => cookie.startsWith('isLoggedIn='));
-	    let usernameCookie = cookies.find(cookie => cookie.startsWith('username='));
-
-	    if (!isLoggedIn) {
-	        window.location.href = "/index.html";
-	    } else {
-	        let usernameValue = usernameCookie ? usernameCookie.split('=')[1] : null;
-
-	        try {
-	            let user = await fetch(`/cmusr/search/${usernameValue}`).then(response => response.json());
-
-	            // 判断权限，权限为 4 或 2 的用户可以看到修改按钮
-	            if (user.authority === 4 || user.authority === 2) {
-	                if (user.authority === 4) {
-	                    document.getElementById('user-management-link').style.display = "inline-block";
-	                }
-	                window.canEdit = true;  // 设置 canEdit 为 true，表示有权限编辑
-	            } else {
-	                window.canEdit = false;  // 没有权限编辑
-	            }
-
-	            // 权限检查完成后，调用页面加载函数
-	            loadApplications(currentPage); // 确保在权限检查后加载应用数据
-
-	        } catch (error) {
-	            console.error('获取用户信息失败:', error);
-	        }
-	    }
-	}
-	// 页面加载完成后检查登录状态、显示问候信息，并加载申请数据
-    $(document).ready(function() {
-        checkLogin();
-        showGreeting();
-        loadApplications(currentPage);
-    });
 
 </script>
 

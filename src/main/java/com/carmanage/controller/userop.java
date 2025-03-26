@@ -28,6 +28,15 @@ public class userop {
     	return cmusrMapper.selectByPrimaryKey(username);
     }
     
+    
+    //查找记录
+    @GetMapping("/find/{uid}")
+    public cmusr selectByUid(@PathVariable  Integer uid)
+    {
+    	return cmusrMapper.selectByUid(uid);
+    }
+    
+    
     //删除一个记录
     @GetMapping("/delete/{username}")
     public int deleteByPrimaryKey(@PathVariable  String username)

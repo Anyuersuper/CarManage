@@ -50,6 +50,7 @@ public class carop {
     {
     	cmusr user = cmusrMapper.selectByPrimaryKey(username);
     	row.setUid(user.getUid());
+    	row.setStatus("正常");
     	return cmcarMapper.insert(row);
     }
     
