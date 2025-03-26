@@ -3,7 +3,7 @@ package com.carmanage.dao;
 import java.util.Date;
 
 public class cmworkorder {
-    private Integer workorderid;
+    private String workorderid;
 
     private Integer uid;
 
@@ -17,12 +17,12 @@ public class cmworkorder {
 
     private String status;
 
-    public Integer getWorkorderid() {
+    public String getWorkorderid() {
         return workorderid;
     }
 
-    public void setWorkorderid(Integer workorderid) {
-        this.workorderid = workorderid;
+    public void setWorkorderid(String workorderid) {
+        this.workorderid = workorderid == null ? null : workorderid.trim();
     }
 
     public Integer getUid() {

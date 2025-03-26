@@ -2,6 +2,7 @@ package com.carmanage.controller;
 
 import java.io.Console;
 import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class workorderop {
     
     //删除一个记录
     @GetMapping("/delete/{workorderid}")
-    public int deleteByPrimaryKey(@PathVariable  Integer workorderid)
+    public int deleteByPrimaryKey(@PathVariable  String workorderid)
     {
     	return cmworkorderMapper.deleteByPrimaryKey(workorderid);
     }
@@ -85,9 +86,10 @@ public class workorderop {
     	else {
 			if (row.getStatus().equals("已完成")) {
 				List<cmorder> all = cmorderMapper.selectAll();
-				int maxorderid = all.stream().mapToInt(cmorder::getOrderid).max().orElse(0);
 				cmorder newcmorder = new cmorder();
-				newcmorder.setOrderid(maxorderid + 1);
+				Instant now = Instant.now();
+				long timestamp = now.toEpochMilli();
+				newcmorder.setOrderid("OD" + timestamp);
 				newcmorder.setUid(row.getUid());
 				newcmorder.setMoney(money);
 				newcmorder.setStarttime(row.getStarttime());

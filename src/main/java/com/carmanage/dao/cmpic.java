@@ -1,26 +1,26 @@
 package com.carmanage.dao;
 
 public class cmpic {
-    private Integer picid;
+    private String picid;
 
-    private Integer subid;
+    private String subid;
 
     private String filepath;
 
-    public Integer getPicid() {
+    public String getPicid() {
         return picid;
     }
 
-    public void setPicid(Integer picid) {
-        this.picid = picid;
+    public void setPicid(String picid) {
+        this.picid = picid == null ? null : picid.trim();
     }
 
-    public Integer getSubid() {
+    public String getSubid() {
         return subid;
     }
 
-    public void setSubid(Integer subid) {
-        this.subid = subid;
+    public void setSubid(String subid) {
+        this.subid = subid == null ? null : subid.trim();
     }
 
     public String getFilepath() {
