@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.rmi.server.UID;
 import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,13 +59,13 @@ public class subop {
     
     //查找记录根据uid
     @GetMapping("/find/{subid}")
-    public cmsub selectByPrimaryKey(@PathVariable  Integer subid)
+    public cmsub selectByPrimaryKey(@PathVariable  String subid)
     {
     	return cmsubMapper.selectByPrimaryKey(subid);
     }
     
     //上传图片
-    public int uploadImage(int subid, MultipartFile file) 
+    public int uploadImage(String subid, MultipartFile file) 
     {
 	    if (file.isEmpty()) {
 	        return 0;
@@ -72,8 +73,9 @@ public class subop {
 	
 	    // 计算 picid
 	    List<cmpic> all = cmpicMapper.selectAll();
-	    int maxPicid = all.stream().mapToInt(cmpic::getPicid).max().orElse(0);
-	    int picid = maxPicid + 1;
+	    Instant now = Instant.now();
+		long timestamp = now.toEpochMilli();
+	    String picid = "img" + timestamp ;
 	    
 	    // 定义文件保存路径
 	    String uploadDir = imagesavepath;
@@ -138,8 +140,9 @@ public class subop {
     		if (row.getStatus().equals("通过")) {
     			cmworkorder cmworkorderrow = new cmworkorder();
     			List<cmworkorder> all = cmworkorderMapper.selectAll();
-    			int maxworkorderid = all.stream().mapToInt(cmworkorder::getWorkorderid).max().orElse(0);
-    			cmworkorderrow.setWorkorderid(maxworkorderid + 1);
+    			Instant now = Instant.now();
+    			long timestamp = now.toEpochMilli();
+    			cmworkorderrow.setWorkorderid( "GD"  +  timestamp );
     			cmworkorderrow.setUid(demo.getUid());
     			cmworkorderrow.setCmuid(3);
     			long currentTimeMillis = System.currentTimeMillis();
@@ -170,8 +173,9 @@ public class subop {
         // 计算 subid
         List<cmsub> all = cmsubMapper.selectAll();
         int uid = cmusrMapper.selectByPrimaryKey(username).getUid();
-        int maxsubid = all.stream().mapToInt(cmsub::getSubid).max().orElse(0);
-        int subid = maxsubid + 1;
+        Instant now = Instant.now();
+		long timestamp = now.toEpochMilli();
+        String subid = "GD" + timestamp;
 
         // 创建并插入 `cmsub`
         cmsub row = new cmsub();

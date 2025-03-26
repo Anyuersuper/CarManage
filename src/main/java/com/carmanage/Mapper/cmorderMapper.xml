@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.carmanage.Mapper.cmorderMapper">
   <resultMap id="BaseResultMap" type="com.carmanage.dao.cmorder">
-    <id column="orderid" jdbcType="INTEGER" property="orderid" />
+    <id column="orderid" jdbcType="VARCHAR" property="orderid" />
     <result column="carid" jdbcType="VARCHAR" property="carid" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="money" jdbcType="INTEGER" property="money" />
@@ -10,36 +10,37 @@
     <result column="finishedtime" jdbcType="TIMESTAMP" property="finishedtime" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
-  <sql id="Base_Column_List">
-    orderid, carid, uid, money, starttime, finishedtime, status
-  </sql>
-    <select id="selectAll" resultMap="BaseResultMap">
+	<select id="selectAll" resultMap="BaseResultMap">
 	select
 	<include refid="Base_Column_List" />
 	from cm_order
   </select>
-  
-    <select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   select
   <include refid="Base_Column_List" />
   from cm_order
   where uid = #{uid,jdbcType=INTEGER}
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  
+  
+  <sql id="Base_Column_List">
+    orderid, carid, uid, money, starttime, finishedtime, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from cm_order
-    where orderid = #{orderid,jdbcType=INTEGER}
+    where orderid = #{orderid,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from cm_order
-    where orderid = #{orderid,jdbcType=INTEGER}
+    where orderid = #{orderid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.carmanage.dao.cmorder">
     insert into cm_order (orderid, carid, uid, 
       money, starttime, finishedtime, 
       status)
-    values (#{orderid,jdbcType=INTEGER}, #{carid,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, 
+    values (#{orderid,jdbcType=VARCHAR}, #{carid,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, 
       #{money,jdbcType=INTEGER}, #{starttime,jdbcType=TIMESTAMP}, #{finishedtime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=VARCHAR})
   </insert>
@@ -70,7 +71,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderid != null">
-        #{orderid,jdbcType=INTEGER},
+        #{orderid,jdbcType=VARCHAR},
       </if>
       <if test="carid != null">
         #{carid,jdbcType=VARCHAR},
@@ -114,7 +115,7 @@
         status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
-    where orderid = #{orderid,jdbcType=INTEGER}
+    where orderid = #{orderid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.carmanage.dao.cmorder">
     update cm_order
@@ -124,6 +125,6 @@
       starttime = #{starttime,jdbcType=TIMESTAMP},
       finishedtime = #{finishedtime,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=VARCHAR}
-    where orderid = #{orderid,jdbcType=INTEGER}
+    where orderid = #{orderid,jdbcType=VARCHAR}
   </update>
 </mapper>

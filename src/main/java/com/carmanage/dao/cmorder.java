@@ -3,7 +3,7 @@ package com.carmanage.dao;
 import java.util.Date;
 
 public class cmorder {
-    private Integer orderid;
+    private String orderid;
 
     private String carid;
 
@@ -17,12 +17,12 @@ public class cmorder {
 
     private String status;
 
-    public Integer getOrderid() {
+    public String getOrderid() {
         return orderid;
     }
 
-    public void setOrderid(Integer orderid) {
-        this.orderid = orderid;
+    public void setOrderid(String orderid) {
+        this.orderid = orderid == null ? null : orderid.trim();
     }
 
     public String getCarid() {

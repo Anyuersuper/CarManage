@@ -40,7 +40,7 @@ public class picop {
     
     // subdetail
     @GetMapping("/detailpic/{subid}")
-    public String getMethodName(@RequestParam Integer subid) {
+    public String getMethodName(@RequestParam String subid) {
         cmsubMapper.selectByPrimaryKey(subid);
         return new String();
     }

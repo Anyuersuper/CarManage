@@ -2,22 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.carmanage.Mapper.cmsubMapper">
   <resultMap id="BaseResultMap" type="com.carmanage.dao.cmsub">
-    <id column="subid" jdbcType="INTEGER" property="subid" />
+    <id column="subid" jdbcType="VARCHAR" property="subid" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="carid" jdbcType="VARCHAR" property="carid" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
-  <sql id="Base_Column_List">
-    subid, uid, carid, content, status
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from cm_sub
-    where subid = #{subid,jdbcType=INTEGER}
-  </select>
-    <select id="selectAll" resultMap="BaseResultMap">
+  
+  <select id="selectAll" resultMap="BaseResultMap">
 	select
 	<include refid="Base_Column_List" />
 	from cm_sub
@@ -28,14 +20,25 @@
     from cm_sub
     where uid = #{uid}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  
+  
+  <sql id="Base_Column_List">
+    subid, uid, carid, content, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_sub
+    where subid = #{subid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from cm_sub
-    where subid = #{subid,jdbcType=INTEGER}
+    where subid = #{subid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.carmanage.dao.cmsub">
     insert into cm_sub (subid, uid, carid, 
       content, status)
-    values (#{subid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{carid,jdbcType=VARCHAR}, 
+    values (#{subid,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{carid,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.carmanage.dao.cmsub">
@@ -59,7 +62,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="subid != null">
-        #{subid,jdbcType=INTEGER},
+        #{subid,jdbcType=VARCHAR},
       </if>
       <if test="uid != null">
         #{uid,jdbcType=INTEGER},
@@ -91,7 +94,7 @@
         status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
-    where subid = #{subid,jdbcType=INTEGER}
+    where subid = #{subid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.carmanage.dao.cmsub">
     update cm_sub
@@ -99,6 +102,6 @@
       carid = #{carid,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR}
-    where subid = #{subid,jdbcType=INTEGER}
+    where subid = #{subid,jdbcType=VARCHAR}
   </update>
 </mapper>

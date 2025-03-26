@@ -5,13 +5,13 @@ import java.util.List;
 import com.carmanage.dao.cmworkorder;
 
 public interface cmworkorderMapper {
-    int deleteByPrimaryKey(Integer workorderid);
+    int deleteByPrimaryKey(String workorderid);
 
     int insert(cmworkorder row);
 
     int insertSelective(cmworkorder row);
 
-    cmworkorder selectByPrimaryKey(Integer workorderid);
+    cmworkorder selectByPrimaryKey(String workorderid);
 
     int updateByPrimaryKeySelective(cmworkorder row);
 

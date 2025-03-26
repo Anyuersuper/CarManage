@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.carmanage.Mapper.cmworkorderMapper">
   <resultMap id="BaseResultMap" type="com.carmanage.dao.cmworkorder">
-    <id column="workorderid" jdbcType="INTEGER" property="workorderid" />
+    <id column="workorderid" jdbcType="VARCHAR" property="workorderid" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="cmuid" jdbcType="INTEGER" property="cmuid" />
     <result column="carid" jdbcType="VARCHAR" property="carid" />
@@ -13,8 +13,14 @@
   <sql id="Base_Column_List">
     workorderid, uid, cmuid, carid, starttime, finishedtime, status
   </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_workorder
+    where workorderid = #{workorderid,jdbcType=VARCHAR}
   </select>
-    <select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  
+  <select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from cm_workorder
@@ -32,21 +38,15 @@
 	from cm_workorder
   </select>
   
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from cm_workorder
-    where workorderid = #{workorderid,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from cm_workorder
-    where workorderid = #{workorderid,jdbcType=INTEGER}
+    where workorderid = #{workorderid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.carmanage.dao.cmworkorder">
     insert into cm_workorder (workorderid, uid, cmuid, 
       carid, starttime, finishedtime, 
       status)
-    values (#{workorderid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{cmuid,jdbcType=INTEGER}, 
+    values (#{workorderid,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{cmuid,jdbcType=INTEGER}, 
       #{carid,jdbcType=VARCHAR}, #{starttime,jdbcType=TIMESTAMP}, #{finishedtime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=VARCHAR})
   </insert>
@@ -77,7 +77,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="workorderid != null">
-        #{workorderid,jdbcType=INTEGER},
+        #{workorderid,jdbcType=VARCHAR},
       </if>
       <if test="uid != null">
         #{uid,jdbcType=INTEGER},
@@ -121,7 +121,7 @@
         status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
-    where workorderid = #{workorderid,jdbcType=INTEGER}
+    where workorderid = #{workorderid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.carmanage.dao.cmworkorder">
     update cm_workorder
@@ -131,6 +131,6 @@
       starttime = #{starttime,jdbcType=TIMESTAMP},
       finishedtime = #{finishedtime,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=VARCHAR}
-    where workorderid = #{workorderid,jdbcType=INTEGER}
+    where workorderid = #{workorderid,jdbcType=VARCHAR}
   </update>
 </mapper>

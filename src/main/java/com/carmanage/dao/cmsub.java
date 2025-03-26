@@ -1,7 +1,7 @@
 package com.carmanage.dao;
 
 public class cmsub {
-    private Integer subid;
+    private String subid;
 
     private Integer uid;
 
@@ -11,12 +11,12 @@ public class cmsub {
 
     private String status;
 
-    public Integer getSubid() {
+    public String getSubid() {
         return subid;
     }
 
-    public void setSubid(Integer subid) {
-        this.subid = subid;
+    public void setSubid(String subid) {
+        this.subid = subid == null ? null : subid.trim();
     }
 
     public Integer getUid() {
