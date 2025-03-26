@@ -13,7 +13,7 @@
 	from cm_pic
 	</select>
 	
-	 <select id="selectBySubid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	 <select id="selectBySubid" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from cm_pic

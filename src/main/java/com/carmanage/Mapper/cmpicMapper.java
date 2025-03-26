@@ -17,8 +17,7 @@ public interface cmpicMapper {
 
     int updateByPrimaryKey(cmpic row);
     
-    
-    List<cmpic> selectBySubid(Integer subid);
+    List<cmpic> selectBySubid(String subid);
     
     List<cmpic> selectAll();
 }

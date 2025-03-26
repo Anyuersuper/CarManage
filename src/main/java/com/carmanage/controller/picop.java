@@ -34,7 +34,7 @@ public class picop {
     
     // 查找记录根据subid
     @GetMapping("/find/{subid}")
-    public List<cmpic> selectByPrimaryKey(@PathVariable Integer subid) {
+    public List<cmpic> selectByPrimaryKey(@PathVariable String subid) {
         return cmpicMapper.selectBySubid(subid);
     }
     
