@@ -2,15 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.carmanage.Mapper.cmcarMapper">
   <resultMap id="BaseResultMap" type="com.carmanage.dao.cmcar">
-    <id column="carnum" jdbcType="VARCHAR" property="carnum" />
+    <id column="carid" jdbcType="VARCHAR" property="carid" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="kind" jdbcType="VARCHAR" property="kind" />
     <result column="year" jdbcType="VARCHAR" property="year" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
-  <sql id="Base_Column_List">
-    carnum, uid, kind, year, status
-  </sql>
   <select id="selectAll" resultMap="BaseResultMap">
 	select
 	<include refid="Base_Column_List" />
@@ -19,27 +16,32 @@
     <select id="selectByUid" parameterType="java.lang.Integer" resultType="com.carmanage.dao.cmcar">
     SELECT * FROM cm_car WHERE uid = #{uid, jdbcType=INTEGER}
   </select>
+  
+  
+  <sql id="Base_Column_List">
+    carid, uid, kind, year, status
+  </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from cm_car
-    where carnum = #{carnum,jdbcType=VARCHAR}
+    where carid = #{carid,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from cm_car
-    where carnum = #{carnum,jdbcType=VARCHAR}
+    where carid = #{carid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.carmanage.dao.cmcar">
-    insert into cm_car (carnum, uid, kind, 
+    insert into cm_car (carid, uid, kind, 
       year, status)
-    values (#{carnum,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{kind,jdbcType=VARCHAR}, 
+    values (#{carid,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{kind,jdbcType=VARCHAR}, 
       #{year,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.carmanage.dao.cmcar">
     insert into cm_car
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="carnum != null">
-        carnum,
+      <if test="carid != null">
+        carid,
       </if>
       <if test="uid != null">
         uid,
@@ -55,8 +57,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="carnum != null">
-        #{carnum,jdbcType=VARCHAR},
+      <if test="carid != null">
+        #{carid,jdbcType=VARCHAR},
       </if>
       <if test="uid != null">
         #{uid,jdbcType=INTEGER},
@@ -88,7 +90,7 @@
         status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
-    where carnum = #{carnum,jdbcType=VARCHAR}
+    where carid = #{carid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.carmanage.dao.cmcar">
     update cm_car
@@ -96,6 +98,6 @@
       kind = #{kind,jdbcType=VARCHAR},
       year = #{year,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR}
-    where carnum = #{carnum,jdbcType=VARCHAR}
+    where carid = #{carid,jdbcType=VARCHAR}
   </update>
 </mapper>
