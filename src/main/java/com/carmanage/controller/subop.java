@@ -139,7 +139,6 @@ public class subop {
 		}else {
     		if (row.getStatus().equals("通过")) {
     			cmworkorder cmworkorderrow = new cmworkorder();
-    			List<cmworkorder> all = cmworkorderMapper.selectAll();
     			Instant now = Instant.now();
     			long timestamp = now.toEpochMilli();
     			cmworkorderrow.setWorkorderid( "GD"  +  timestamp );
@@ -164,7 +163,7 @@ public class subop {
     
    //增加一个记录
     @PostMapping("/add")
-    public int insert(@RequestParam("content") String content,@RequestParam(value = "files", required = false) MultipartFile[] files,@CookieValue(value = "username", required = false) String username) {
+    public int insert(@RequestParam("content") String content,@RequestParam(value = "files", required = false) MultipartFile[] files,@CookieValue(value = "username", required = false) String username,@RequestParam ("carid") String carid) {
 
         if (username == null) {
             return 0; // 用户未登录，直接返回失败
@@ -177,10 +176,13 @@ public class subop {
 		long timestamp = now.toEpochMilli();
         String subid = "GD" + timestamp;
 
+        System.out.print( subid);
+        
         // 创建并插入 `cmsub`
         cmsub row = new cmsub();
         row.setSubid(subid);
         row.setUid(uid);
+        row.setCarid(carid);
         row.setContent(content);
         row.setStatus("审批中");
 

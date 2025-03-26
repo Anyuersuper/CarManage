@@ -16,6 +16,7 @@ public interface cmsubMapper {
     int updateByPrimaryKeySelective(cmsub row);
 
     int updateByPrimaryKey(cmsub row);
+    
     List<cmsub> selectAll();
     
     List<cmsub> selectByUid(int uid);

@@ -299,12 +299,10 @@
 	                    </select>
 	                </td>
 	                <td>
-	                    <div class="button-container">
-	                        <button class="btn btn-view" onclick="viewApplication(${application.subid})">查看</button>
-	                        ${window.canEdit ? `
-	                            <button class="btn btn-edit" onclick="editApplication(${application.subid})">修改</button>
-	                        ` : ''}
-	                    </div>
+						<div class="button-container">
+						            <button class="btn btn-view" onclick="viewApplication('${application.subid}')">查看</button>
+						            ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.subid}')">修改</button>` : ''}
+						</div>
 	                </td>
 	            </tr>`;
 
@@ -324,6 +322,7 @@
 
 	// 查看按钮点击事件，跳转到 subdetail.html 页面
 	function viewApplication(subid) {
+		console.log("查看按钮被点击，subid:", subid);
 	    window.location.href = `/subdetail.html?subid=${subid}`;
 	}
 

@@ -321,8 +321,8 @@
 				    <td>${statusOptions}</td>
 				    <td>
 				        <div class="button-container">
-				            ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication(${application.workorderid})">修改</button>` : ''}
-				            <button class="btn btn-view" onclick="deleteApplication(${application.workorderid})">删除</button>
+				            ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.workorderid}')">修改</button>` : ''}
+				            <button class="btn btn-view" onclick="deleteApplication('${application.workorderid}')">删除</button>
 				        </div>
 				    </td>
 				</tr>`;
