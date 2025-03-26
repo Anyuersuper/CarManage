@@ -2,45 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.carmanage.Mapper.cmcarMapper">
   <resultMap id="BaseResultMap" type="com.carmanage.dao.cmcar">
-    <id column="carid" jdbcType="INTEGER" property="carid" />
+    <id column="carnum" jdbcType="VARCHAR" property="carnum" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="kind" jdbcType="VARCHAR" property="kind" />
     <result column="year" jdbcType="VARCHAR" property="year" />
-    <result column="color" jdbcType="VARCHAR" property="color" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
   <sql id="Base_Column_List">
-    carid, uid, kind, year, color
+    carnum, uid, kind, year, status
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from cm_car
-    where carid = #{carid,jdbcType=INTEGER}
-  </select>
-  
   <select id="selectAll" resultMap="BaseResultMap">
 	select
 	<include refid="Base_Column_List" />
 	from cm_car
 	</select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from cm_car
-    where carid = #{carid,jdbcType=INTEGER}
-  </delete>
-  <select id="selectByUid" parameterType="java.lang.Integer" resultType="com.carmanage.dao.cmcar">
+    <select id="selectByUid" parameterType="java.lang.Integer" resultType="com.carmanage.dao.cmcar">
     SELECT * FROM cm_car WHERE uid = #{uid, jdbcType=INTEGER}
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_car
+    where carnum = #{carnum,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cm_car
+    where carnum = #{carnum,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="com.carmanage.dao.cmcar">
-    insert into cm_car (carid, uid, kind, 
-      year, color)
-    values (#{carid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{kind,jdbcType=VARCHAR}, 
-      #{year,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR})
+    insert into cm_car (carnum, uid, kind, 
+      year, status)
+    values (#{carnum,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{kind,jdbcType=VARCHAR}, 
+      #{year,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.carmanage.dao.cmcar">
     insert into cm_car
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="carid != null">
-        carid,
+      <if test="carnum != null">
+        carnum,
       </if>
       <if test="uid != null">
         uid,
@@ -51,13 +50,13 @@
       <if test="year != null">
         year,
       </if>
-      <if test="color != null">
-        color,
+      <if test="status != null">
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="carid != null">
-        #{carid,jdbcType=INTEGER},
+      <if test="carnum != null">
+        #{carnum,jdbcType=VARCHAR},
       </if>
       <if test="uid != null">
         #{uid,jdbcType=INTEGER},
@@ -68,8 +67,8 @@
       <if test="year != null">
         #{year,jdbcType=VARCHAR},
       </if>
-      <if test="color != null">
-        #{color,jdbcType=VARCHAR},
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -85,18 +84,18 @@
       <if test="year != null">
         year = #{year,jdbcType=VARCHAR},
       </if>
-      <if test="color != null">
-        color = #{color,jdbcType=VARCHAR},
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
-    where carid = #{carid,jdbcType=INTEGER}
+    where carnum = #{carnum,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.carmanage.dao.cmcar">
     update cm_car
     set uid = #{uid,jdbcType=INTEGER},
       kind = #{kind,jdbcType=VARCHAR},
       year = #{year,jdbcType=VARCHAR},
-      color = #{color,jdbcType=VARCHAR}
-    where carid = #{carid,jdbcType=INTEGER}
+      status = #{status,jdbcType=VARCHAR}
+    where carnum = #{carnum,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -5,18 +5,14 @@
     <id column="workorderid" jdbcType="INTEGER" property="workorderid" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="cmuid" jdbcType="INTEGER" property="cmuid" />
+    <result column="carid" jdbcType="VARCHAR" property="carid" />
     <result column="starttime" jdbcType="TIMESTAMP" property="starttime" />
     <result column="finishedtime" jdbcType="TIMESTAMP" property="finishedtime" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
   <sql id="Base_Column_List">
-    workorderid, uid, cmuid, starttime, finishedtime, status
+    workorderid, uid, cmuid, carid, starttime, finishedtime, status
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from cm_workorder
-    where workorderid = #{workorderid,jdbcType=INTEGER}
   </select>
     <select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,30 +20,35 @@
     from cm_workorder
     where uid = #{uid,jdbcType=INTEGER}
   </select>
-
   <select id="selectByCmUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from cm_workorder
     where cmuid = #{cmuid,jdbcType=INTEGER}
   </select>
-
   <select id="selectAll" resultMap="BaseResultMap">
 	select
 	<include refid="Base_Column_List" />
 	from cm_workorder
-	</select>
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_workorder
+    where workorderid = #{workorderid,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from cm_workorder
     where workorderid = #{workorderid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.carmanage.dao.cmworkorder">
     insert into cm_workorder (workorderid, uid, cmuid, 
-      starttime, finishedtime, status
-      )
+      carid, starttime, finishedtime, 
+      status)
     values (#{workorderid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{cmuid,jdbcType=INTEGER}, 
-      #{starttime,jdbcType=TIMESTAMP}, #{finishedtime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}
-      )
+      #{carid,jdbcType=VARCHAR}, #{starttime,jdbcType=TIMESTAMP}, #{finishedtime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.carmanage.dao.cmworkorder">
     insert into cm_workorder
@@ -60,6 +61,9 @@
       </if>
       <if test="cmuid != null">
         cmuid,
+      </if>
+      <if test="carid != null">
+        carid,
       </if>
       <if test="starttime != null">
         starttime,
@@ -81,6 +85,9 @@
       <if test="cmuid != null">
         #{cmuid,jdbcType=INTEGER},
       </if>
+      <if test="carid != null">
+        #{carid,jdbcType=VARCHAR},
+      </if>
       <if test="starttime != null">
         #{starttime,jdbcType=TIMESTAMP},
       </if>
@@ -101,6 +108,9 @@
       <if test="cmuid != null">
         cmuid = #{cmuid,jdbcType=INTEGER},
       </if>
+      <if test="carid != null">
+        carid = #{carid,jdbcType=VARCHAR},
+      </if>
       <if test="starttime != null">
         starttime = #{starttime,jdbcType=TIMESTAMP},
       </if>
@@ -117,6 +127,7 @@
     update cm_workorder
     set uid = #{uid,jdbcType=INTEGER},
       cmuid = #{cmuid,jdbcType=INTEGER},
+      carid = #{carid,jdbcType=VARCHAR},
       starttime = #{starttime,jdbcType=TIMESTAMP},
       finishedtime = #{finishedtime,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=VARCHAR}

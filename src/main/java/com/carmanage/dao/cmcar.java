@@ -1,7 +1,7 @@
 package com.carmanage.dao;
 
 public class cmcar {
-    private Integer carid;
+    private String carnum;
 
     private Integer uid;
 
@@ -9,14 +9,14 @@ public class cmcar {
 
     private String year;
 
-    private String color;
+    private String status;
 
-    public Integer getCarid() {
-        return carid;
+    public String getCarnum() {
+        return carnum;
     }
 
-    public void setCarid(Integer carid) {
-        this.carid = carid;
+    public void setCarnum(String carnum) {
+        this.carnum = carnum == null ? null : carnum.trim();
     }
 
     public Integer getUid() {
@@ -43,11 +43,11 @@ public class cmcar {
         this.year = year == null ? null : year.trim();
     }
 
-    public String getColor() {
-        return color;
+    public String getStatus() {
+        return status;
     }
 
-    public void setColor(String color) {
-        this.color = color == null ? null : color.trim();
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 }

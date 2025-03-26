@@ -5,13 +5,13 @@ import java.util.List;
 import com.carmanage.dao.cmcar;
 
 public interface cmcarMapper {
-    int deleteByPrimaryKey(Integer carid);
+    int deleteByPrimaryKey(String carnum);
 
     int insert(cmcar row);
 
     int insertSelective(cmcar row);
 
-    cmcar selectByPrimaryKey(Integer carid);
+    cmcar selectByPrimaryKey(String carnum);
 
     int updateByPrimaryKeySelective(cmcar row);
 
@@ -20,4 +20,5 @@ public interface cmcarMapper {
     List<cmcar> selectAll();
     
     List<cmcar> selectByUid(int uid);
+    
 }

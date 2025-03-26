@@ -5,6 +5,8 @@ public class cmsub {
 
     private Integer uid;
 
+    private String carid;
+
     private String content;
 
     private String status;
@@ -23,6 +25,14 @@ public class cmsub {
 
     public void setUid(Integer uid) {
         this.uid = uid;
+    }
+
+    public String getCarid() {
+        return carid;
+    }
+
+    public void setCarid(String carid) {
+        this.carid = carid == null ? null : carid.trim();
     }
 
     public String getContent() {

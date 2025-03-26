@@ -2,14 +2,9 @@ package com.carmanage.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.rmi.server.UID;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -26,7 +21,6 @@ import com.carmanage.Mapper.cmcarMapper;
 import com.carmanage.Mapper.cmusrMapper;
 import com.carmanage.dao.cmcar;
 import com.carmanage.dao.cmusr;
-import com.carmanage.dao.cmworkorder;
 import com.carmanage.service.BaiduImageRecognitionService;
 import com.carmanage.service.ImageRecognitionService;
 
@@ -45,7 +39,7 @@ public class carop {
     }
     
     @GetMapping("/search/{carid}")
-    public cmcar selectByPrimaryKey(@PathVariable  Integer carid)
+    public cmcar selectByPrimaryKey(@PathVariable  String carid)
     {
     	return cmcarMapper.selectByPrimaryKey(carid);
     }
@@ -54,10 +48,6 @@ public class carop {
     @PostMapping("/add")
     public int insert(@RequestBody  cmcar row,@CookieValue(value = "username", required = false) String username) 
     {
-    	List<cmcar> all = cmcarMapper.selectAll();
-		int maxcarid = all.stream().mapToInt(cmcar::getCarid).max().orElse(0);
-		int carid = maxcarid + 1;
-		row.setCarid(carid);
     	cmusr user = cmusrMapper.selectByPrimaryKey(username);
     	row.setUid(user.getUid());
     	return cmcarMapper.insert(row);
@@ -65,7 +55,7 @@ public class carop {
     
     //删除一个记录
     @GetMapping("/delete/{carid}")
-    public int deleteByPrimaryKey(@PathVariable  Integer carid)
+    public int deleteByPrimaryKey(@PathVariable  String carid)
     {
     	return cmcarMapper.deleteByPrimaryKey(carid);
     }
@@ -121,7 +111,6 @@ public class carop {
         cmcar car  = new cmcar();
         car.setKind(firseJsonObject.getString("name"));
         car.setYear(firseJsonObject.getString("year"));
-        car.setColor(color);
         return car;
     }
 
