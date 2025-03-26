@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>填写车辆信息</title>
+  <style>
+    /* 全局样式 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+
+    /* 按钮样式 */
+    #openFormButton {
+      background: linear-gradient(to right, #4CAF50, #45a049);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #openFormButton:hover {
+      background: linear-gradient(to right, #45a049, #388e3c);
+    }
+
+    /* 弹窗背景 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    /* 弹窗内容 */
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.3s ease-in-out;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 表单样式 */
+    .form-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      width: 30%;
+      font-size: 14px;
+      text-align: left; /* 标签左对齐 */
+      margin-right: 10px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 65%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+
+    /* 只读展示字段 */
+    .readonly-field {
+      width: 65%;
+      padding: 8px;
+      background-color: transparent; /* 透明背景 */
+      border: none; /* 去除边框 */
+      font-size: 14px;
+      text-align: left;
+      color: #333; /* 保证文本颜色清晰 */
+    }
+
+    /* 按钮容器 */
+    .button-container {
+      display: flex;
+      justify-content: flex-end; /* 右对齐按钮 */
+      margin-top: 20px;
+    }
+
+    /* 按钮样式 */
+    .button-container button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-left: 10px; /* 按钮之间的间距 */
+    }
+
+ 
+
+    /* 调整按钮宽度，使其不占满整个横排 */
+    .button-container button {
+      width: auto; /* 取消宽度拉伸 */
+    }
+
+	/* 确认弹窗的背景 */
+	.confirmation-modal {
+	  display: none; /* 初始不显示 */
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 100%;
+	  background-color: rgba(0, 0, 0, 0.5); /* 更深的背景色 */
+	  justify-content: center;
+	  align-items: center;
+	  display: flex; /* 使用flexbox进行布局 */
+	}
+
+	/* 确认弹窗内容 */
+	.confirmation-modal .modal-content {
+	  background: white;
+	  padding: 25px;
+	  border-radius: 10px;
+	  width: 300px; /* 设置弹窗的宽度 */
+	  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+	  animation: fadeIn 0.3s ease-in-out;
+	  position: relative;
+	}
+
+	
+    /* 右下角按钮布局 */
+    .confirmation-modal .modal-content .button-container {
+      display: flex;
+      justify-content: center;
+    }
+
+	
+	/* 第二个弹窗（确认弹窗）按钮样式 */
+	.confirmation-modal .modal-content .button-container button {
+	  padding: 10px 20px;
+	  border: none;
+	  border-radius: 5px;
+	  font-size: 16px;
+	  cursor: pointer;
+	  transition: background 0.3s;
+	  margin-left: 10px;
+	}
+
+	
+	
+	
+    /* 第二个弹窗（确认弹窗）样式 */
+    .confirmation-modal .modal-content {
+      width: 300px; /* 设置确认弹窗的宽度 */
+    }
+
+    /* 确认弹窗的背景 */
+    .confirmation-modal {
+      display: none; /* 初始不显示 */
+    }
+
+	
+	/* 按钮样式 */
+	button {
+	  padding: 10px 20px;
+	  border: none;
+	  border-radius: 5px;
+	  font-size: 16px;
+	  cursor: pointer;
+	  transition: background 0.3s;
+	}
+
+	/* 确认弹窗按钮 */
+	.confirmation-modal .modal-content .button-container button,
+	#vehicleFormModal .modal-content .button-container button {
+	  background: linear-gradient(to right, #4CAF50, #45a049); /* 绿色渐变背景 */
+	  color: white;
+	}
+
+	.confirmation-modal .modal-content .button-container button:hover,
+	#vehicleFormModal .modal-content .button-container button:hover {
+	  background: linear-gradient(to right, #45a049, #388e3c); /* 深绿色渐变背景 */
+	}
+
+	.confirmation-modal .modal-content .button-container button#cancelConfirmation,
+	#vehicleFormModal .modal-content .button-container button#closeFormButton {
+	  background: #f44336; /* 红色背景 */
+	}
+
+	.confirmation-modal .modal-content .button-container button#cancelConfirmation:hover,
+	#vehicleFormModal .modal-content .button-container button#closeFormButton:hover {
+	  background: #d32f2f; /* 深红色背景 */
+	}
+
+	
+	
+  </style>
+</head>
+<body>
+
+  <button id="openFormButton">填写车辆信息</button>
+
+  <!-- 填写车辆信息的弹窗 -->
+  <div id="vehicleFormModal" class="modal">
+    <div class="modal-content">
+      <h2>添加车辆</h2>
+      <form id="vehicleForm">
+        
+        <div class="form-group">
+          <label for="licensePlate">车牌号:</label>
+          <input type="text" id="licensePlate" name="licensePlate" required></input>
+        </div>
+
+        <div class="form-group">
+          <label for="vehicleName">车辆名称:</label>
+          <input type="text" id="vehicleName" name="vehicleName" required></input>
+        </div>
+
+        <!-- 年份改为月份选择 -->
+        <div class="form-group">
+          <label for="year">月份:</label>
+          <input type="month" id="year" name="year" required></input>
+        </div>
+
+        <!-- 只读属性 -->
+        <div class="form-group">
+          <label>状态:</label>
+          <div class="readonly-field" id="status">正常</div>
+        </div>
+
+        <div class="form-group">
+          <label>关联申请:</label>
+          <div class="readonly-field" id="relatedRequest">申请编号12345</div>
+        </div>
+
+        <div class="form-group">
+          <label>关联申请状态:</label>
+          <div class="readonly-field" id="relatedRequestStatus">已审批</div>
+        </div>
+
+        <div class="form-group">
+          <label>关联工单:</label>
+          <div class="readonly-field" id="relatedWorkOrder">工单编号67890</div>
+        </div>
+
+        <div class="form-group">
+          <label>关联工单状态:</label>
+          <div class="readonly-field" id="relatedWorkOrderStatus">处理中</div>
+        </div>
+
+        <div class="form-group">
+          <label>关联账单:</label>
+          <div class="readonly-field" id="relatedBill">账单编号98765</div>
+        </div>
+
+        <div class="form-group">
+          <label>关联账单状态:</label>
+          <div class="readonly-field" id="relatedBillStatus">已支付</div>
+        </div>
+
+        <!-- 右下角按钮容器 -->
+        <div class="button-container">
+          <button type="button" id="closeFormButton">取消</button>
+          <button type="button" id="confirmButton">确认</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- 确认弹窗 -->
+  <div id="confirmationModal" class="confirmation-modal">
+    <div class="modal-content">
+      <h2>确认添加</h2>
+      <p>确认添加车辆吗？</p>
+      <div class="button-container">
+        <button type="button" id="cancelConfirmation">取消</button>
+        <button type="button" id="confirmAdd">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 获取元素
+    const openFormButton = document.getElementById('openFormButton');
+    const vehicleFormModal = document.getElementById('vehicleFormModal');
+    const closeFormButton = document.getElementById('closeFormButton');
+    const confirmButton = document.getElementById('confirmButton');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const cancelConfirmationButton = document.getElementById('cancelConfirmation');
+    const confirmAddButton = document.getElementById('confirmAdd');
+
+    // 打开填写车辆信息弹窗
+    openFormButton.addEventListener('click', function() {
+      vehicleFormModal.style.display = 'flex';
+    });
+
+    // 关闭填写车辆信息弹窗
+    closeFormButton.addEventListener('click', function() {
+      vehicleFormModal.style.display = 'none';
+    });
+
+    // 打开确认弹窗
+    confirmButton.addEventListener('click', function() {
+      confirmationModal.style.display = 'flex';
+    });
+
+    // 取消确认操作
+    cancelConfirmationButton.addEventListener('click', function() {
+      confirmationModal.style.display = 'none';
+    });
+
+    // 确认添加车辆
+    confirmAddButton.addEventListener('click', function() {
+      // 提交表单并关闭填写车辆信息弹窗
+      console.log('车辆信息已确认提交');
+      vehicleFormModal.style.display = 'none';
+      confirmationModal.style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>

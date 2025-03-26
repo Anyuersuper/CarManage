@@ -5,6 +5,8 @@ import java.util.Date;
 public class cmorder {
     private Integer orderid;
 
+    private String carid;
+
     private Integer uid;
 
     private Integer money;
@@ -21,6 +23,14 @@ public class cmorder {
 
     public void setOrderid(Integer orderid) {
         this.orderid = orderid;
+    }
+
+    public String getCarid() {
+        return carid;
+    }
+
+    public void setCarid(String carid) {
+        this.carid = carid == null ? null : carid.trim();
     }
 
     public Integer getUid() {

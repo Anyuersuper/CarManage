@@ -9,6 +9,8 @@ public class cmworkorder {
 
     private Integer cmuid;
 
+    private String carid;
+
     private Date starttime;
 
     private Date finishedtime;
@@ -37,6 +39,14 @@ public class cmworkorder {
 
     public void setCmuid(Integer cmuid) {
         this.cmuid = cmuid;
+    }
+
+    public String getCarid() {
+        return carid;
+    }
+
+    public void setCarid(String carid) {
+        this.carid = carid == null ? null : carid.trim();
     }
 
     public Date getStarttime() {
