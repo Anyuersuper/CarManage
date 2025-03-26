@@ -17,6 +17,226 @@
             align-items: center;
         }
 
+	
+		   /* 弹窗背景 */
+		   .modal {
+		     display: none;
+		     position: fixed;
+		     top: 0;
+		     left: 0;
+		     width: 100%;
+		     height: 100%;
+		     background-color: rgba(0, 0, 0, 0.5);
+		     justify-content: center;
+		     align-items: center;
+		     transition: opacity 0.3s ease-in-out;
+		   }
+
+		   /* 弹窗内容 */
+		   .modal-content {
+		     background: white;
+		     padding: 25px;
+		     border-radius: 10px;
+		     width: 400px;
+		     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		     animation: fadeIn 0.3s ease-in-out;
+		     position: relative;
+		   }
+
+		   @keyframes fadeIn {
+		     from {
+		       opacity: 0;
+		       transform: translateY(-20px);
+		     }
+		     to {
+		       opacity: 1;
+		       transform: translateY(0);
+		     }
+		   }
+
+		   /* 表单样式 */
+		   .form-group {
+		     display: flex;
+		     align-items: center;
+		     justify-content: flex-start;
+		     margin-bottom: 10px;
+		   }
+
+		   .form-group label {
+		     width: 30%;
+		     font-size: 14px;
+		     text-align: left; /* 标签左对齐 */
+		     margin-right: 10px;
+		   }
+
+		   .form-group input,
+		   .form-group select {
+		     width: 65%;
+		     padding: 8px;
+		     border: 1px solid #ccc;
+		     border-radius: 5px;
+		     font-size: 14px;
+		     transition: border 0.3s;
+		   }
+
+		   .form-group input:focus,
+		   .form-group select:focus {
+		     border-color: #4CAF50;
+		     outline: none;
+		   }
+
+		   /* 只读展示字段 */
+		   .readonly-field {
+		     width: 65%;
+		     padding: 8px;
+		     background-color: transparent; /* 透明背景 */
+		     border: none; /* 去除边框 */
+		     font-size: 14px;
+		     text-align: left;
+		     color: #333; /* 保证文本颜色清晰 */
+		   }
+
+		   /* 按钮容器 */
+		   .button-container {
+		     display: flex;
+		     justify-content: flex-end; /* 右对齐按钮 */
+		     margin-top: 20px;
+		   }
+
+		   /* 按钮样式 */
+		   .button-container button {
+		     padding: 10px 20px;
+		     border: none;
+		     border-radius: 5px;
+		     font-size: 16px;
+		     cursor: pointer;
+		     transition: background 0.3s;
+		     margin-left: 10px; /* 按钮之间的间距 */
+		   }
+
+
+
+		   /* 调整按钮宽度，使其不占满整个横排 */
+		   .button-container button {
+		     width: auto; /* 取消宽度拉伸 */
+		   }
+
+		/* 确认弹窗的背景 */
+		.confirmation-modal {
+		  display: none; /* 初始不显示 */
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  background-color: rgba(0, 0, 0, 0.5); /* 更深的背景色 */
+		  justify-content: center;
+		  align-items: center;
+		  display: flex; /* 使用flexbox进行布局 */
+		}
+
+		/* 确认弹窗内容 */
+		.confirmation-modal .modal-content {
+		  background: white;
+		  padding: 25px;
+		  border-radius: 10px;
+		  width: 300px; /* 设置弹窗的宽度 */
+		  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		  animation: fadeIn 0.3s ease-in-out;
+		  position: relative;
+		}
+
+
+		   /* 右下角按钮布局 */
+		   .confirmation-modal .modal-content .button-container {
+		     display: flex;
+		     justify-content: center;
+		   }
+
+
+		/* 第二个弹窗（确认弹窗）按钮样式 */
+		.confirmation-modal .modal-content .button-container button {
+		  padding: 10px 20px;
+		  border: none;
+		  border-radius: 5px;
+		  font-size: 16px;
+		  cursor: pointer;
+		  transition: background 0.3s;
+		  margin-left: 10px;
+		}
+
+
+
+
+		   /* 第二个弹窗（确认弹窗）样式 */
+		   .confirmation-modal .modal-content {
+		     width: 300px; /* 设置确认弹窗的宽度 */
+		   }
+
+		   /* 确认弹窗的背景 */
+		   .confirmation-modal {
+		     display: none; /* 初始不显示 */
+		   }
+
+
+		/* 按钮样式 */
+		button {
+		  padding: 10px 20px;
+		  border: none;
+		  border-radius: 5px;
+		  font-size: 16px;
+		  cursor: pointer;
+		  transition: background 0.3s;
+		}
+
+		/* 确认弹窗按钮 */
+		.confirmation-modal .modal-content .button-container button,
+		#vehicleFormModal .modal-content .button-container button {
+		  background: linear-gradient(to right, #4CAF50, #45a049); /* 绿色渐变背景 */
+		  color: white;
+		}
+
+		.confirmation-modal .modal-content .button-container button:hover,
+		#vehicleFormModal .modal-content .button-container button:hover {
+		  background: linear-gradient(to right, #45a049, #388e3c); /* 深绿色渐变背景 */
+		}
+
+		.confirmation-modal .modal-content .button-container button#cancelConfirmation,
+		#vehicleFormModal .modal-content .button-container button#closeFormButton {
+		  background: #f44336; /* 红色背景 */
+		}
+
+		.confirmation-modal .modal-content .button-container button#cancelConfirmation:hover,
+		#vehicleFormModal .modal-content .button-container button#closeFormButton:hover {
+		  background: #d32f2f; /* 深红色背景 */
+		}
+		
+		
+		
+		/* 让编辑弹窗的确认和取消按钮颜色和添加弹窗一致 */
+		#editVehicleFormModal .modal-content .button-container button,
+		#editConfirmationModal .modal-content .button-container button {
+		  background: linear-gradient(to right, #4CAF50, #45a049); /* 绿色渐变背景 */
+		  color: white;
+		}
+
+		#editVehicleFormModal .modal-content .button-container button:hover,
+		#editConfirmationModal .modal-content .button-container button:hover {
+		  background: linear-gradient(to right, #45a049, #388e3c); /* 深绿色渐变背景 */
+		}
+
+		/* 编辑弹窗的取消按钮（红色） */
+		#editVehicleFormModal .modal-content .button-container button:first-child,
+		#editConfirmationModal .modal-content .button-container button:first-child {
+		  background: #f44336; /* 红色背景 */
+		}
+
+		#editVehicleFormModal .modal-content .button-container button:first-child:hover,
+		#editConfirmationModal .modal-content .button-container button:first-child:hover {
+		  background: #d32f2f; /* 深红色背景 */
+		}
+
+		
         /* 导航栏样式 */
         .navbar {
             width: 100%;
@@ -151,6 +371,28 @@
             background-color: #c82333;
         }
 
+		
+		/* 为查看按钮增加样式 */
+		.btn-view {
+		    background-color: #17a2b8;
+		    color: white;
+		    padding: 6px 15px;
+		    border-radius: 4px;
+		    cursor: pointer;
+		    font-size: 14px;
+		    transition: background-color 0.3s, transform 0.3s;
+		}
+
+		.btn-view:hover {
+		    background-color: #138496;
+		    transform: translateY(-2px);
+		}
+
+		.btn-view:active {
+		    transform: translateY(1px);
+		}
+
+		
         .pagination {
             margin-top: 20px;
             display: flex;
@@ -180,6 +422,151 @@
     </style>
 </head>
 <body>
+	  <!-- 填写车辆信息的弹窗 -->
+	  <div id="vehicleFormModal" class="modal">
+	    <div class="modal-content">
+	      <h2 id="tctitle">添加车辆</h2>
+	      <form id="vehicleForm">
+	        
+	        <div class="form-group">
+	          <label for="licensePlate">车牌号:</label>
+	          <input type="text" id="licensePlate" name="licensePlate" required></input>
+	        </div>
+	
+	        <div class="form-group">
+	          <label for="vehicleName">车辆名称:</label>
+	          <input type="text" id="vehicleName" name="vehicleName" required></input>
+	        </div>
+	
+	        <!-- 年份改为月份选择 -->
+	        <div class="form-group">
+	          <label for="year">月份:</label>
+	          <input type="month" id="year" name="year" required></input>
+	        </div>
+	
+	        <!-- 只读属性 -->
+	        <div class="form-group">
+	          <label>状态:</label>
+	          <div class="readonly-field" id="status">正常</div>
+	        </div>
+	
+	        <div class="form-group">
+	          <label>关联申请:</label>
+	          <div class="readonly-field" id="relatedRequest">暂无</div>
+	        </div>
+	
+	        <div class="form-group">
+	          <label>关联申请状态:</label>
+	          <div class="readonly-field" id="relatedRequestStatus">暂无</div>
+	        </div>
+	
+	        <div class="form-group">
+	          <label>关联工单:</label>
+	          <div class="readonly-field" id="relatedWorkOrder">暂无</div>
+	        </div>
+	
+	        <div class="form-group">
+	          <label>关联工单状态:</label>
+	          <div class="readonly-field" id="relatedWorkOrderStatus">暂无</div>
+	        </div>
+	
+	        <div class="form-group">
+	          <label>关联账单:</label>
+	          <div class="readonly-field" id="relatedBill">暂无</div>
+	        </div>
+	
+	        <div class="form-group">
+	          <label>关联账单状态:</label>
+	          <div class="readonly-field" id="relatedBillStatus">暂无</div>
+	        </div>
+	
+	        <!-- 右下角按钮容器 -->
+	        <div class="button-container">
+	          <button type="button" id="closeFormButton" onclick="onetcclose()">取消</button>
+	          <button type="button" id="confirmButton" onclick="twotcopen()">确认</button>
+	        </div>
+	
+	      </form>
+	    </div>
+	  </div>
+	  <!-- 确认弹窗 -->
+	  <div id="confirmationModal" class="confirmation-modal">
+	    <div class="modal-content">
+	      <h2>确认添加</h2>
+	      <p>确认添加车辆吗？</p>
+	      <div class="button-container">
+	        <button type="button" id="cancelConfirmation" onclick="twotcclose()">取消</button>
+	        <button type="button" id="confirmAdd" onclick="submittc()">确认</button>
+	      </div>
+	    </div>
+	  </div>
+	  
+
+	  <!-- 编辑车辆弹窗 -->
+	  <div id="editVehicleFormModal" class="modal">
+	    <div class="modal-content">
+	      <h2 id="editTitle">编辑车辆</h2>
+	      <form id="editVehicleForm">
+	        <div class="form-group">
+	          <label for="editLicensePlate">车牌号:</label>
+	          <input type="text" id="editLicensePlate" name="editLicensePlate" required>
+	        </div>
+	        <div class="form-group">
+	          <label for="editVehicleName">车辆名称:</label>
+	          <input type="text" id="editVehicleName" name="editVehicleName" required>
+	        </div>
+	        <div class="form-group">
+	          <label for="editYear">月份:</label>
+	          <input type="month" id="editYear" name="editYear" required>
+	        </div>
+	        <!-- 只读字段 -->
+	        <div class="form-group">
+	          <label>状态:</label>
+	          <div class="readonly-field" id="editStatus">正常</div>
+	        </div>
+	        <div class="form-group">
+	          <label>关联申请:</label>
+	          <div class="readonly-field" id="editRelatedRequest">申请编号12345</div>
+	        </div>
+	        <div class="form-group">
+	          <label>关联申请状态:</label>
+	          <div class="readonly-field" id="editRelatedRequestStatus">已审批</div>
+	        </div>
+	        <div class="form-group">
+	          <label>关联工单:</label>
+	          <div class="readonly-field" id="editRelatedWorkOrder">工单编号67890</div>
+	        </div>
+	        <div class="form-group">
+	          <label>关联工单状态:</label>
+	          <div class="readonly-field" id="editRelatedWorkOrderStatus">处理中</div>
+	        </div>
+	        <div class="form-group">
+	          <label>关联账单:</label>
+	          <div class="readonly-field" id="editRelatedBill">账单编号98765</div>
+	        </div>
+	        <div class="form-group">
+	          <label>关联账单状态:</label>
+	          <div class="readonly-field" id="editRelatedBillStatus">已支付</div>
+	        </div>
+	        <!-- 右下角按钮 -->
+	        <div class="button-container">
+	          <button type="button" id="editCloseButton" onclick="editModalClose()">取消</button>
+	          <button type="button" id="editConfirmButton" onclick="confirmEditOpen()">确认</button>
+	        </div>
+	      </form>
+	    </div>
+	  </div>
+	  <!-- 确认编辑弹窗 -->
+	  <div id="editConfirmationModal" class="confirmation-modal">
+	    <div class="modal-content">
+	      <h2>确认编辑</h2>
+	      <p>确认修改车辆信息吗？</p>
+	      <div class="button-container">
+	        <button type="button" id="editCancelConfirmation" onclick="confirmEditClose()">取消</button>
+	        <button type="button" id="editConfirmEdit" onclick="submitEdit()">确认</button>
+	      </div>
+	    </div>
+	  </div>
 
     <!-- 导航栏 -->
     <div class="navbar">
@@ -198,34 +585,33 @@
 
 		<div class="search-container">
 		    <select id="searchField">
-		        <option value="carid">车辆ID</option>
-		        <option value="uid">UID</option>
+		        <option value="carid">车牌号</option>
+		        <option value="uid">车主</option>
 		        <option value="kind">种类</option>
 		        <option value="year">年份</option>
-		        <option value="color">颜色</option>
 		    </select>
 		    <input type="text" id="searchInput" placeholder="请输入搜索内容">
 		    <button class="btn btn-search" onclick="searchCars()">搜索</button>
-			<button class="btn btn-search" onclick="window.location.href='/caradd.html'">添加车辆</button> <!-- 使用 JavaScript 跳转 -->
+			<button class="btn btn-search" onclick="onetcopen()">添加车辆</button> <!-- 使用 JavaScript 跳转 -->
+			
 		</div>
-
-
 
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>车辆ID</th>
-                        <th>UID</th>
-                        <th>种类</th>
-                        <th>年份</th>
-                        <th>颜色</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody id="car-table">
-                    <!-- 车辆数据将通过 JavaScript 填充 -->
-                </tbody>
+				<thead>
+				    <tr>
+				        <th>车牌号</th>
+				        <th>车主</th>
+				        <th>种类</th>
+				        <th>年份</th>
+				        <th>状态</th>
+				        <th>操作</th>
+				    </tr>
+				</thead>
+				<tbody id="car-table">
+				    <!-- 车辆数据将通过 JavaScript 填充 -->
+				</tbody>
+   
             </table>
 
             <div class="pagination">
@@ -238,9 +624,57 @@
 
 	<script>
 			let cars = [];
+			let sub = [];
+			let car ,carid ,kind,year;
 			let currentPage = 1;
 			const pageSize = 10;
 
+			//打开一级弹窗
+			function onetcopen(){
+				vehicleFormModal.style.display = 'flex';
+			}
+			//关闭一级弹窗
+			function onetcclose(){
+			     vehicleFormModal.style.display = 'none';
+			}
+			
+			//打开二级弹窗
+			function twotcopen(){
+				 confirmationModal.style.display = 'flex';
+			}
+			//关闭二级弹窗
+			function twotcclose(){
+				confirmationModal.style.display = 'none';
+			}
+			
+			//提交弹窗信息
+			function submittc(){
+				carid = document.getElementById("licensePlate").value;
+				kind = document.getElementById("vehicleName").value;
+				year = document.getElementById("year").value;
+				fetch('/cmcar/add', {
+				  method: 'POST', // 请求方式
+				  headers: {
+				    'Content-Type': 'application/json', // 设置请求头为 JSON 格式
+				    'Postman-Token': '71fa0281-3bea-4d99-bf8a-7e36d5dc9c9f', // 可选的自定义请求头
+				    'cache-control': 'no-cache', // 缓存控制
+				  },
+				  body: JSON.stringify({
+				    carid: carid,
+				    kind: kind,
+				    year: year,
+				  }), // 请求体，转为 JSON 字符串
+				})
+				.then(response => response.json()) // 处理返回的 JSON 数据
+				.then(data => {
+				  console.log('成功:', data); // 打印返回的数据
+				  window.location.href = "/carmanage.html"; // 跳转到登录页面
+				})
+				.catch(error => {
+				  console.error('错误:', error); // 错误处理
+				});
+			}
+			
 			// 获取车辆数据
 			function fetchCars() {
 			    $.get("/cmcar/mycar", function(data) {
@@ -250,35 +684,133 @@
 			        alert("获取车辆数据失败！");
 			    });
 			}
+			
+			
+			// 编辑车辆弹窗控制
+			function editModalOpen(carid) {
+			  // 根据车ID获取当前车辆数据
+			  car = cars.find(c => c.carid === carid);
+			  document.getElementById("editLicensePlate").value=car.carid;
+			  document.getElementById("editVehicleName").value=car.kind;
+			  document.getElementById("editYear").value=car.year;
+			  document.getElementById('editVehicleFormModal').style.display = 'flex';
+			}
 
+			function editModalClose() {
+			  document.getElementById('editVehicleFormModal').style.display = 'none';
+			}
+
+			function confirmEditOpen() {
+			  document.getElementById('editConfirmationModal').style.display = 'flex';
+			}
+
+			function confirmEditClose() {
+			  document.getElementById('editConfirmationModal').style.display = 'none';
+			}
+			function submitEdit() {
+			    // 获取用户输入的值
+			    var carid = document.getElementById("editLicensePlate").value;
+			    var kind = document.getElementById("editVehicleName").value;
+			    var year = document.getElementById("editYear").value;
+
+			    // 控制台打印检查输入
+			    console.log(carid, kind, year);
+
+			    // 检查输入是否有效
+			    if (!carid || !kind || !year) {
+			        alert("请填写所有必填项！");
+			        return; // 如果某个字段为空，则退出函数
+			    }
+
+			    // 确保变量 car 已定义并且包含数据
+			    if (car) {
+			        // 更新车辆对象
+			        car.carid = carid;
+			        car.kind = kind;
+			        car.year = year;
+
+			        // 发送更新请求到后端
+			        $.ajax({
+			            url: `/cmcar/update`,
+			            type: 'POST',
+			            contentType: 'application/json',
+			            data: JSON.stringify(car),
+			            success: function(response) {
+			                fetchCars();  // 重新加载数据
+							window.location.href="/carmanage.html"
+			            },
+			            error: function() {
+			                alert("更新车辆信息失败！");
+			            }
+			        });
+			    } else {
+			        alert("未找到车辆信息！");
+			    }
+			}
+
+			
 			// 渲染表格数据
 			function renderTable() {
 			    $("#car-table").empty();
 			    let start = (currentPage - 1) * pageSize;
 			    let end = start + pageSize;
 			    let pageCars = cars.slice(start, end);
-
+	
 			    pageCars.forEach(car => {
-			        let row = `
-			            <tr>
-			                <td>${car.carid}</td>
-			                <td>${car.uid}</td>
-			                <td>${car.kind}</td>
-			                <td>${car.year}</td>
-			                <td>${car.color}</td>
-			                <td>
-			                    <button class="btn btn-edit" onclick="editCar(${car.carid})">修改</button>
-			                    <button class="btn btn-delete" onclick="deleteCar(${car.carid})">删除</button>
-			                </td>
-			            </tr>
-			        `;
-			        $("#car-table").append(row);
+			        console.log(`${car.uid}`);
+			        
+			        fetch(`/cmusr/find/${car.uid}`, {
+			            method: 'GET',
+			            headers: {
+			                'Postman-Token': 'b034b197-e0ce-4c4f-909f-067c227c539d',
+			                'cache-control': 'no-cache'
+			            }
+			        })
+			        .then(response => {
+			            if (!response.ok) {
+			                throw new Error('Network response was not ok');
+			            }
+			            return response.json();
+			        })
+			        .then(data => {
+			            console.log(data);
+			            let username = data.username;  // 这里拿到了 username
+	
+			            // **确保在 fetch 完成后再生成并添加 row**
+			            let row = `
+			                <tr>
+			                    <td>${car.carid}</td>
+			                    <td>${username}</td>  <!-- 这里 username 会正确显示 -->
+			                    <td>${car.kind}</td>
+			                    <td>${car.year}</td>
+			                    <td>${car.status}</td>
+			                    <td>
+			                        <button class="btn btn-view" onclick="viewCar('${car.carid}')">查看</button> 
+			                        <button class="btn btn-edit" onclick="editModalOpen('${car.carid}')">编辑</button>
+			                        <button class="btn btn-delete" onclick="deleteCar('${car.carid}')">删除</button>
+			                    </td>
+			                </tr>
+			            `;
+			            $("#car-table").append(row); // **确保 row 在 fetch 之后添加**
+			        })
+			        .catch(error => {
+			            console.error('There was a problem with the fetch operation:', error);
+			        });
 			    });
-
+	
 			    $("#pageInfo").text(`第 ${currentPage} 页 / 共 ${Math.ceil(cars.length / pageSize)} 页`);
 			    $("#prevPage").prop("disabled", currentPage === 1);
 			    $("#nextPage").prop("disabled", currentPage * pageSize >= cars.length);
 			}
+
+
+			// 查看车辆
+			function viewCar(carid) {
+			    console.log("carid:",carid);  // 控制台输出
+			}
+
+
+
 
 			// 上一页
 			$("#prevPage").click(function() {
@@ -295,44 +827,7 @@
 			        renderTable();
 			    }
 			});
-
-
-			// 修改车辆
-			function editCar(carid) {
-			    // 根据车ID获取当前车辆数据
-			    const car = cars.find(c => c.carid === carid);
-			    
-			    if (car) {
-			        // 弹出编辑表单，预填充数据
-			        const newKind = prompt("修改车辆种类:", car.kind);
-			        const newYear = prompt("修改车辆年份:", car.year);
-			        const newColor = prompt("修改车辆颜色:", car.color);
-			        
-			        if (newKind && newYear && newColor) {
-			            // 更新车辆对象
-			            car.kind = newKind;
-			            car.year = newYear;
-			            car.color = newColor;
-
-			            // 发送更新请求到后端
-			            $.ajax({
-			                url: `/cmcar/update`,
-			                type: 'POST',
-			                contentType: 'application/json',
-			                data: JSON.stringify(car),
-			                success: function(response) {
-			                    alert("车辆信息更新成功！");
-			                    fetchCars();  // 重新加载数据
-			                },
-			                error: function() {
-			                    alert("更新车辆信息失败！");
-			                }
-			            });
-			        }
-			    }
-			}
-
-
+			
 			// 删除车辆
 			function deleteCar(carid) {
 			    if (confirm(`确定要删除车辆 ID: ${carid} 吗？`)) {
