@@ -16,6 +16,185 @@
 		    flex-direction: column;
 		    align-items: center;
 		}
+		/* 弹窗背景 */
+		    .modal {
+		      display: none;
+		      position: fixed;
+		      top: 0;
+		      left: 0;
+		      width: 100%;
+		      height: 100%;
+		      background-color: rgba(0, 0, 0, 0.5);
+		      justify-content: center;
+		      align-items: center;
+		      transition: opacity 0.3s ease-in-out;
+		    }
+
+		    /* 弹窗内容 */
+		    .modal-content {
+		      background: white;
+		      padding: 25px;
+		      border-radius: 10px;
+		      width: 400px;
+		      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		      animation: fadeIn 0.3s ease-in-out;
+		      position: relative;
+		    }
+
+		    @keyframes fadeIn {
+		      from {
+		        opacity: 0;
+		        transform: translateY(-20px);
+		      }
+		      to {
+		        opacity: 1;
+		        transform: translateY(0);
+		      }
+		    }
+
+		    /* 表单样式 */
+		    .form-group {
+		      display: flex;
+		      align-items: center;
+		      justify-content: flex-start;
+		      margin-bottom: 10px;
+		    }
+
+		    .form-group label {
+		      width: 30%;
+		      font-size: 14px;
+		      text-align: left; /* 标签左对齐 */
+		      margin-right: 10px;
+		    }
+
+		    .form-group input,
+		    .form-group select {
+		      width: 65%;
+		      padding: 8px;
+		      border: 1px solid #ccc;
+		      border-radius: 5px;
+		      font-size: 14px;
+		      transition: border 0.3s;
+		    }
+
+		    .form-group input:focus,
+		    .form-group select:focus {
+		      border-color: #4CAF50;
+		      outline: none;
+		    }
+
+		    /* 上传图片预览 */
+		    #imagePreview {
+		      display: flex;
+		      justify-content: space-between;
+		      margin-top: 10px;
+		    }
+
+		    #imagePreview img {
+		      width: 80px;
+		      height: 80px;
+		      object-fit: cover;
+		      border-radius: 5px;
+		    }
+
+		    /* 按钮容器 */
+		    .button-container {
+		      display: flex;
+		      justify-content: flex-end; /* 右对齐按钮 */
+		      margin-top: 20px;
+		    }
+
+		    .button-container button {
+		      padding: 10px 20px;
+		      border: none;
+		      border-radius: 5px;
+		      font-size: 16px;
+		      cursor: pointer;
+		      transition: background 0.3s;
+		      margin-left: 10px; /* 按钮之间的间距 */
+		    }
+			
+			/* 确认弹窗初始隐藏 */
+			#confirmationModal {
+			  display: none;
+			}
+
+
+		    /* 确认弹窗的背景 */
+		    .confirmation-modal {
+		      display: none; /* 初始不显示 */
+		      position: fixed;
+		      top: 0;
+		      left: 0;
+		      width: 100%;
+		      height: 100%;
+		      background-color: rgba(0, 0, 0, 0.5); /* 更深的背景色 */
+		      justify-content: center;
+		      align-items: center;
+		      display: flex; /* 使用flexbox进行布局 */
+		    }
+
+		    /* 确认弹窗内容 */
+		    .confirmation-modal .modal-content {
+		      background: white;
+		      padding: 25px;
+		      border-radius: 10px;
+		      width: 300px; /* 设置弹窗的宽度 */
+		      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		      animation: fadeIn 0.3s ease-in-out;
+		      position: relative;
+		    }
+
+		    /* 右下角按钮布局 */
+		    .confirmation-modal .modal-content .button-container {
+		      display: flex;
+		      justify-content: center;
+		    }
+
+		    /* 确认弹窗按钮样式 */
+		    .confirmation-modal .modal-content .button-container button {
+		      padding: 10px 20px;
+		      border: none;
+		      border-radius: 5px;
+		      font-size: 16px;
+		      cursor: pointer;
+		      transition: background 0.3s;
+		      margin-left: 10px;
+		    }
+
+		    /* 按钮样式 */
+		    button {
+		      padding: 10px 20px;
+		      border: none;
+		      border-radius: 5px;
+		      font-size: 16px;
+		      cursor: pointer;
+		      transition: background 0.3s;
+		    }
+
+		    /* 确认弹窗按钮 */
+		    .confirmation-modal .modal-content .button-container button,
+		    #vehicleFormModal .modal-content .button-container button {
+		      background: linear-gradient(to right, #4CAF50, #45a049); /* 绿色渐变背景 */
+		      color: white;
+		    }
+
+		    .confirmation-modal .modal-content .button-container button:hover,
+		    #vehicleFormModal .modal-content .button-container button:hover {
+		      background: linear-gradient(to right, #45a049, #388e3c); /* 深绿色渐变背景 */
+		    }
+
+		    .confirmation-modal .modal-content .button-container button#cancelConfirmation,
+		    #vehicleFormModal .modal-content .button-container button#closeFormButton {
+		      background: #f44336; /* 红色背景 */
+		    }
+
+		    .confirmation-modal .modal-content .button-container button#cancelConfirmation:hover,
+		    #vehicleFormModal .modal-content .button-container button#closeFormButton:hover {
+		      background: #d32f2f; /* 深红色背景 */
+		    }
+		
+		
 
         /* 导航栏样式 */
         .navbar {
@@ -173,8 +352,10 @@
 		
 		/* 按钮容器样式 */
 		.button-container {
+			margin-top: -8px;
 		    display: flex;
 		    gap: 10px; /* 按钮之间的间距 */
+		    align-items: center; /* 垂直居中 */
 		    justify-content: flex-start; /* 按钮左对齐 */
 		}
 
@@ -190,9 +371,11 @@
 		    font-size: 14px;
 		}
 
+		/* 按钮悬停效果 */
 		.btn-edit:hover {
 		    background-color: #218838;
 		}
+
 
 		/* 查看按钮 */
 		.btn-view {
@@ -214,6 +397,65 @@
     </style>
 </head>
 <body>
+	<!-- 提交申请弹窗 -->
+	  <div id="vehicleFormModal" class="modal">
+	    <div class="modal-content">
+	      <h2>提交申请</h2>
+	      <form id="vehicleForm">
+	        
+	        <!-- 申请车辆 -->
+	        <div class="form-group">
+	          <label for="vehicle">申请车辆:</label>
+	          <select id="vehicle" name="vehicle" required>
+	            <option value="vehicle1">车辆1</option>
+	            <option value="vehicle2">车辆2</option>
+	            <option value="vehicle3">车辆3</option>
+	          </select>
+	        </div>
+
+	        <!-- 申请内容 -->
+	        <div class="form-group">
+	          <label for="issue">申请内容:</label>
+	          <select id="issue" name="issue" required>
+	            <option value="车灯损坏">车灯损坏</option>
+	            <option value="后视镜损坏">后视镜损坏</option>
+	            <option value="保险杠损坏">保险杠损坏</option>
+	            <option value="轮胎损坏">轮胎损坏</option>
+	            <option value="座椅损坏">座椅损坏</option>
+	            <option value="车漆刮擦">车漆刮擦</option>
+	          </select>
+	        </div>
+
+	        <!-- 上传图片 -->
+	        <div class="form-group">
+	          <label for="images" >上传图片:</label>
+	          <input  style="width: 61%;" type="file" id="images" name="images" accept="image/*" multiple onchange="previewImages()" />
+	        </div>
+			
+			
+			<div id="imagePreview" style="margin-bottom: 10px;"></div>
+
+	        <!-- 右下角按钮容器 -->
+	        <div class="button-container" >
+	          <button type="button" id="closeFormButton" style="margin-left: 58%;">取消</button>
+	          <button type="button" id="confirmButton">确认</button>
+	        </div>
+
+	      </form>
+	    </div>
+	  </div>
+
+	  <!-- 确认弹窗 -->
+	  <div id="confirmationModal" class="confirmation-modal">
+	    <div class="modal-content">
+	      <h2>确认提交</h2>
+	      <p>确认提交申请吗？</p>
+	      <div class="button-container">
+	        <button type="button" id="cancelConfirmation">取消</button>
+	        <button type="button" id="confirmAdd">确认</button>
+	      </div>
+	    </div>
+	  </div>
 
     <!-- 导航栏 -->
     <div class="navbar">
@@ -240,7 +482,7 @@
             </select>
             <input type="text" id="search-input" placeholder="请输入搜索内容" />
             <button onclick="searchApplications()">搜索</button>
-			<button onclick="window.location.href='subadd.html'">提交申请</button>
+			<button onclick="onetcopen()">提交申请</button>
 
         </div>
 
@@ -274,7 +516,133 @@
 		let currentPage = 1;
 		let filteredApplications = []; // 存储过滤后的申请数据
 		let allApplications = []; // 存储所有申请数据，便于搜索
+		// 获取元素
+	    const vehicleFormModal = document.getElementById('vehicleFormModal');
+	    const closeFormButton = document.getElementById('closeFormButton');
+	    const confirmButton = document.getElementById('confirmButton');
+	    const confirmationModal = document.getElementById('confirmationModal');
+	    const cancelConfirmationButton = document.getElementById('cancelConfirmation');
+	    const confirmAddButton = document.getElementById('confirmAdd');
+	    const imagePreview = document.getElementById('imagePreview');
+			getcar();
 
+			function onetcopen(){
+				vehicleFormModal.style.display = 'flex';
+			}
+			
+		    // 关闭提交申请弹窗
+		    closeFormButton.addEventListener('click', function() {
+		      vehicleFormModal.style.display = 'none';
+		    });
+
+		    // 打开确认弹窗
+		    confirmButton.addEventListener('click', function() {
+		      confirmationModal.style.display = 'flex';
+		    });
+
+		    // 取消确认
+		    cancelConfirmationButton.addEventListener('click', function() {
+		      confirmationModal.style.display = 'none';
+		    });
+
+			confirmAddButton.addEventListener('click', function () {
+			    // 获取表单中的数据
+			    const vehicleSelect = document.getElementById("vehicle");
+			    const issueSelect = document.getElementById("issue");
+			    const vehicle = vehicleSelect.value;
+			    const issue = issueSelect.value;
+
+			    // 创建一个FormData对象
+			    const formData = new FormData();
+			    formData.append('content', issue);  // 申请内容
+			    formData.append('carid', vehicle);  // 申请车辆
+
+			    // 获取上传的图片
+			    const files = document.getElementById('images').files;
+			    Array.from(files).forEach(file => {
+			        formData.append('files', file);
+			    });
+
+			    // 使用fetch进行POST请求
+			    fetch('/cmsub/add', {
+			        method: 'POST',
+			        headers: {
+			            'Postman-Token': '54c8ae6a-1901-4190-a240-543784886dc0',
+			            'cache-control': 'no-cache'
+			        },
+			        body: formData // 将表单数据传递给请求体
+			    })
+			    .then(response => response.json()) // 解析JSON响应
+			    .then(data => {
+			        if (data === 1) {
+			            alert('申请提交成功！');
+			        } else {
+			            alert('申请提交失败！');
+			        }
+			        confirmationModal.style.display = 'none'; // 关闭确认弹窗
+			        vehicleFormModal.style.display = 'none'; // 关闭提交申请弹窗
+			    })
+			    .catch(error => {
+			        console.error('提交申请失败:', error);
+			        alert('提交申请失败，请重试。');
+			    });
+				imagePreview.innerHTML = ''; // 清空图片预览
+				fileInput.value = ''; // 清空选中的文件
+			});
+
+
+
+
+			
+			function getcar(){
+				fetch("/cmcar/mycar", {
+					    method: "GET",
+					    headers: {
+					      "Postman-Token": "f8a5d098-6759-447f-93d5-32fbc247daa5",
+					      "cache-control": "no-cache"
+					    }
+					})
+					    .then(response => response.json()) // 解析JSON
+					    .then(data => {
+					      const vehicleSelect = document.getElementById("vehicle");
+					      vehicleSelect.innerHTML = ""; // 清空原有选项
+			
+					      data.forEach(vehicle => {
+					        const option = document.createElement("option");
+					        option.value = vehicle.carid;
+					        option.textContent = vehicle.carid;
+					        vehicleSelect.appendChild(option);
+					      });
+					    })
+					    .catch(error => console.error("获取车辆数据失败:", error));
+			}
+
+			
+			
+			function previewImages() {
+			  imagePreview.innerHTML = ''; // 清空现有预览
+			  const fileInput = document.getElementById('images');
+			  const files = Array.from(fileInput.files);
+
+			  if (files.length > 3) {
+			    alert('最多只能上传三张图片！');
+			    fileInput.value = ''; // 清空选中的文件
+			    return;
+			  }
+
+			  files.forEach(file => {
+			    const reader = new FileReader();
+			    reader.onload = function(e) {
+			      const img = document.createElement('img');
+			      img.src = e.target.result;
+			      imagePreview.appendChild(img);
+			    };
+			    reader.readAsDataURL(file);
+			  });
+			}
+			
+			
+			
 		function loadApplications(page) {
 		    $.get("/cmsub/mysub", function(data) {
 		        allApplications = data; // 存储所有申请数据
@@ -289,7 +657,7 @@
 		            let content = application.content; // 直接使用内容
 		            let status = application.status;  // 直接使用状态
 
-		            let row = `<tr>
+		            let row = `<tr id="row-${application.subid}">
 		                <td>${application.subid}</td>
 		                <td>${application.uid}</td>
 		                <td>${application.carid}</td>
@@ -314,6 +682,7 @@
 		                    <div class="button-container">
 		                        <button class="btn btn-view" onclick="viewApplication('${application.subid}')">查看</button>
 		                        ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.subid}')">修改</button>` : ''}
+		                        <button class="btn btn-view" style="background-color:#0056b3;" onclick="deletesub('${application.subid}')">撤回</button>
 		                    </div>
 		                </td>
 		            </tr>`;
@@ -324,6 +693,28 @@
 		        updatePagination(page);
 		    });
 		}
+
+		function deletesub(subid) {
+		    fetch(`/cmsub/delete/${subid}`, {
+		        method: 'GET',
+		        headers: {
+		            'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
+		            'cache-control': 'no-cache'
+		        }
+		    })
+		    .then(response => response.json())  // 假设响应是 JSON 格式
+		    .then(data => {
+		        console.log('删除成功:', data);
+		        // 如果删除成功，从页面中移除该行
+		        document.getElementById(`row-${subid}`).remove();  // 根据 subid 移除对应的行
+		        alert("申请已撤回！");
+		    })
+		    .catch(error => {
+		        console.error('删除失败:', error);
+		        alert("删除失败，请重试！");
+		    });
+		}
+
 
 		// 查看按钮点击事件，跳转到 subdetail.html 页面
 		function viewApplication(subid) {

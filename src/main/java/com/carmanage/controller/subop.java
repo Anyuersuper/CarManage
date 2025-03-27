@@ -134,10 +134,10 @@ public class subop {
     public int updateByPrimaryKey(@RequestBody  cmsub row) 
     {
     	cmsub demo = cmsubMapper.selectByPrimaryKey(row.getSubid());
-    	if (demo.getStatus().equals("通过")) {
+    	if (demo.getStatus().equals("已通过")) {
     		return cmsubMapper.updateByPrimaryKeySelective(row);
 		}else {
-    		if (row.getStatus().equals("通过")) {
+    		if (row.getStatus().equals("已通过")) {
     			cmworkorder cmworkorderrow = new cmworkorder();
     			Instant now = Instant.now();
     			long timestamp = now.toEpochMilli();
@@ -206,5 +206,11 @@ public class subop {
     }
 
     
+    //删除一个记录
+    @GetMapping("/delete/{subid}")
+    public int deleteByPrimaryKey(@PathVariable  String subid)
+    {
+    	return cmsubMapper.deleteByPrimaryKey(subid);
+    }
     
 }
