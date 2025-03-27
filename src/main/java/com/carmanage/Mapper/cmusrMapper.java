@@ -20,4 +20,7 @@ public interface cmusrMapper {
     List<cmusr> selectAll();
     
     cmusr selectByUid(Integer uid);
+    
+    List<cmusr> selectByAuthority3();
+
 }

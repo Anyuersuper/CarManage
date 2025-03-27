@@ -37,6 +37,12 @@ public class userop {
     }
     
     
+    @GetMapping("/weixiu")
+    public List<cmusr> weixiuget()
+    {
+    	return cmusrMapper.selectByAuthority3();
+    }
+    
     //删除一个记录
     @GetMapping("/delete/{username}")
     public int deleteByPrimaryKey(@PathVariable  String username)

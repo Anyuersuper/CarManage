@@ -21,6 +21,13 @@
 	<include refid="Base_Column_List" />
 	from cm_usr
 	</select>
+  <!-- 查询所有权限为3的员工 -->
+  <select id="selectByAuthority3" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_usr
+    where authority = 3
+  </select>
 
   <!-- 根据uid查询 -->
   <select id="selectByUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
