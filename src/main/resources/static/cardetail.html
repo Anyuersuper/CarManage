@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆详情</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f8fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            width: 100%;
+            background-color: #007bff;
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .navbar .logout-btn {
+            background-color: #dc3545;
+            position: absolute;
+            right: 20px;
+        }
+
+        .navbar .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* 页面主内容样式更新 */
+        .container {
+            width: 80%;  /* 修改为80%以匹配导航栏宽度 */
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 车辆信息卡片样式优化 */
+        .car-info-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .car-info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .car-info-card h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .car-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);  /* 改为4列布局 */
+            gap: 25px;
+            margin-bottom: 20px;
+            padding: 0 20px;  /* 添加左右内边距 */
+        }
+
+        .info-item {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: #007bff;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        /* 状态信息特殊样式 */
+        #status.info-value {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* 适配暗色主题的hover效果 */
+        @media (prefers-color-scheme: dark) {
+            .info-item:hover {
+                background-color: #f8f9fa;
+            }
+        }
+
+        /* 标签页样式 */
+        .tabs-container {
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            margin-right: 5px;
+            background: transparent;
+            border: none;
+            color: #495057;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab.active {
+            color: #007bff;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #007bff;
+        }
+
+        .tab:hover {
+            color: #007bff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <a href="/home.html">首页</a>
+        <a id="user-management-link" href="/usermanage.html" style="display:none;">用户管理</a>
+        <a href="/carmanage.html">车辆管理</a>
+        <a href="/ordermanage.html">账单管理</a>
+        <a href="/workordermanage.html">工单管理</a>
+        <a href="/submanage.html">申请管理</a>
+        <a href="javascript:void(0);" class="logout-btn" onclick="logout()">退出登录</a>
+    </div>
+
+    <div class="container">
+        <h1 id="greeting"></h1>
+        
+        <!-- 车辆基本信息卡片 -->
+        <div class="car-info-card">
+            <h2>车辆基本信息</h2>
+            <div class="car-info-grid">
+                <div class="info-item">
+                    <div class="info-label">车牌号</div>
+                    <div class="info-value" id="carId"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">车主</div>
+                    <div class="info-value" id="owner"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">种类</div>
+                    <div class="info-value" id="kind"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">年份</div>
+                    <div class="info-value" id="year"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">状态</div>
+                    <div class="info-value" id="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 关联信息表格区域 -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('request')">关联申请信息</button>
+                <button class="tab" onclick="showTab('work')">关联工单信息</button>
+                <button class="tab" onclick="showTab('bill')">关联账单信息</button>
+            </div>
+
+            <div id="request-tab" class="tab-content active">
+                <table class="related-info-table">
+                    <thead>
+                        <tr>
+                            <th>车牌号</th>
+                            <th>关联申请</th>
+                            <th>关联申请状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="related-request-table"></tbody>
+                </table>
+            </div>
+
+            <div id="work-tab" class="tab-content">
+                <table class="related-info-table">
+                    <thead>
+                        <tr>
+                            <th>车牌号</th>
+                            <th>关联工单</th>
+                            <th>关联工单状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="related-work-table"></tbody>
+                </table>
+            </div>
+
+            <div id="bill-tab" class="tab-content">
+                <table class="related-info-table">
+                    <thead>
+                        <tr>
+                            <th>车牌号</th>
+                            <th>关联账单</th>
+                            <th>关联账单状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="related-bill-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查用户是否已登录
+        function checkLogin() {
+            let cookies = document.cookie.split('; ');
+            let isLoggedIn = cookies.find(cookie => cookie.startsWith('isLoggedIn='));
+            let username = cookies.find(cookie => cookie.startsWith('username='));
+
+            if (!isLoggedIn) {
+                window.location.href = "/index.html";
+            } else if (username) {
+                let usernameValue = username.split('=')[1];
+                document.getElementById('greeting').innerText = `${usernameValue}，你好！`;
+
+                fetch(`/cmusr/search/${usernameValue}`)
+                    .then(response => response.json())
+                    .then(user => {
+                        if (user && user.authority === 4) {
+                            document.getElementById('user-management-link').style.display = "inline-block";
+                        }
+                    })
+                    .catch(error => console.error('获取用户信息失败:', error));
+            }
+        }
+
+        function getCarDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const carId = urlParams.get('id');
+            
+            if (!carId) {
+                alert('未找到车辆信息！');
+                return;
+            }
+
+            // 首先获取所有车辆数据
+            fetch('/cmcar/mycar', {
+                method: 'GET',
+                headers: {
+                    'Postman-Token': 'ee5e0d60-4f72-4fa7-a7f4-e7f350d0e5ea',
+                    'cache-control': 'no-cache'
+                }
+            })
+            .then(response => response.json())
+            .then(cars => {
+                // 找到指定的车辆
+                const carData = cars.find(car => car.carid === carId);
+                
+                if (!carData) {
+                    alert('未找到指定车辆信息！');
+                    return;
+                }
+
+                // 填充基本信息
+                document.getElementById('carId').textContent = carData.carid;
+                document.getElementById('kind').textContent = carData.kind;
+                document.getElementById('year').textContent = carData.year;
+                document.getElementById('status').textContent = carData.status;
+
+                // 获取车主信息
+                return fetch(`/cmusr/find/${carData.uid}`, {
+                    method: 'GET',
+                    headers: {
+                        'Postman-Token': 'b034b197-e0ce-4c4f-909f-067c227c539d',
+                        'cache-control': 'no-cache'
+                    }
+                });
+            })
+            .then(response => response.json())
+            .then(userData => {
+                // 填充车主信息
+                document.getElementById('owner').textContent = userData.username;
+                
+                // 填充三个关联信息表格
+                const requestRow = `
+                    <tr>
+                        <td>${carData.carid}</td>
+                        <td>${carData.relatedRequest || '暂无'}</td>
+                        <td>${carData.relatedRequestStatus || '暂无'}</td>
+                        <td>
+                            <button class="btn-view" onclick="viewRequestDetails('${carData.carid}')">查看</button>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('related-request-table').innerHTML = requestRow;
+
+                const workRow = `
+                    <tr>
+                        <td>${carData.carid}</td>
+                        <td>${carData.relatedWorkOrder || '暂无'}</td>
+                        <td>${carData.relatedWorkOrderStatus || '暂无'}</td>
+                        <td>
+                            <button class="btn-view" onclick="viewWorkOrderDetails('${carData.carid}')">查看</button>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('related-work-table').innerHTML = workRow;
+
+                const billRow = `
+                    <tr>
+                        <td>${carData.carid}</td>
+                        <td>${carData.relatedBill || '暂无'}</td>
+                        <td>${carData.relatedBillStatus || '暂无'}</td>
+                        <td>
+                            <button class="btn-view" onclick="viewBillDetails('${carData.carid}')">查看</button>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('related-bill-table').innerHTML = billRow;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('获取车辆信息失败！');
+            });
+        }
+
+        // 查看详情
+        function viewRequestDetails(id) {
+            console.log('查看申请详情:', id);
+        }
+
+        function viewWorkOrderDetails(id) {
+            console.log('查看工单详情:', id);
+        }
+
+        function viewBillDetails(id) {
+            console.log('查看账单详情:', id);
+        }
+
+        // 添加标签页切换功能
+        function showTab(tabName) {
+            // 移除所有标签和内容的active类
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 添加active类到选中的标签和内容
+            document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // 退出登录
+        function logout() {
+            document.cookie = "isLoggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+            window.location.href = "/index.html";
+        }
+
+        // 页面加载完成后执行
+        $(document).ready(function() {
+            checkLogin();
+            getCarDetails();
+        });
+    </script>
+</body>
+</html>
