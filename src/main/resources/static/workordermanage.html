@@ -370,16 +370,19 @@
                     <input type="text" id="edit-workorderid" name="edit-workorderid" readonly style="background-color: #f5f5f5;">
                 </div>
 
-                <!-- 用户ID -->
-                <div class="form-group">
-                    <label for="edit-uid">用户ID:</label>
-                    <input type="text" id="edit-uid" name="edit-uid" readonly style="background-color: #f5f5f5;">
-                </div>
+               
                 
                 <!-- 维修员工ID -->
                 <div class="form-group">
                     <label for="edit-cmuid">维修员工ID:</label>
                     <input type="text" id="edit-cmuid" name="edit-cmuid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+
+                 <!-- 用户ID -->
+                 <div class="form-group">
+                    <label for="edit-uid">车主:</label>
+                    <input type="text" id="edit-uid" name="edit-uid" readonly style="background-color: #f5f5f5;">
                 </div>
 
                 <!-- 车牌号 -->
@@ -449,7 +452,7 @@
 
                 <!-- 用户ID -->
                 <div class="form-group">
-                    <label for="view-uid">用户ID:</label>
+                    <label for="view-uid">车主:</label>
                     <input type="text" id="view-uid" name="view-uid" readonly style="background-color: #f5f5f5;">
                 </div>
                 
@@ -522,7 +525,7 @@
         <div class="search-box">
             <select id="search-field">
                 <option value="workorderid">工单ID</option>
-                <option value="uid">用户ID</option>
+                <option value="uid">车主</option>
                 <option value="cmuid">维修员工ID</option>
                 <option value="status">状态</option>
             </select>
@@ -535,8 +538,8 @@
             <thead>
                 <tr>
                     <th>工单ID</th>
-                    <th>用户ID</th>
                     <th>维修员工ID</th>
+                    <th>车主</th>
                     <th>车牌号</th>
                     <th>开始时间</th>
                     <th>完成时间</th>
@@ -599,19 +602,34 @@
 		}
 
 		// 渲染工单表格
-		function renderTable(data) {
+		async function renderTable(data) {
 		    let tbody = $("#workorder-table tbody");
 		    tbody.empty();
 
-		    // 计算当前页的数据范围
 		    const start = (currentPage - 1) * itemsPerPage;
 		    const end = start + itemsPerPage;
 		    const pageData = data.slice(start, end);
 
-		    pageData.forEach(function (application) {
-		        // 解析并格式化时间为中国时间
+		    for(const application of pageData) {
 		        const startTime = application.starttime ? formatToChinaTime(application.starttime) : "";
 		        const finishedTime = application.finishedtime ? formatToChinaTime(application.finishedtime) : "";
+
+		        // 获取用户名
+		        let username = '';
+		        try {
+		            const response = await fetch(`/cmusr/find/${application.uid}`, {
+		                method: 'GET',
+		                headers: {
+		                    'Postman-Token': 'd6f2de0b-26da-4800-a35f-d1c7d257c5a1',
+		                    'cache-control': 'no-cache'
+		                }
+		            });
+		            const userData = await response.json();
+		            username = userData.username;
+		        } catch(error) {
+		            console.error('获取用户名失败:', error);
+		            username = application.uid;
+		        }
 
 		        let statusOptions = `
 		            <select class="status-dropdown">
@@ -620,28 +638,26 @@
 		            </select>
 		        `;
 
-				let row = `<tr data-workorderid="${application.workorderid}">
-				    <td>${application.workorderid}</td>
-				    <td>${application.uid}</td>
-				    <td>${application.cmuid}</td>
-                    <td>${application.carid}</td>
-				    <td>${startTime}</td>
-				    <td>${finishedTime}</td>
-				    <td>${statusOptions}</td>
-				    <td>
-				        <div class="button-container">
-				            <button class="btn btn-view" onclick="viewApplication('${application.workorderid}')">查看</button>
-				            ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.workorderid}')">修改</button>` : ''}
-				            <button class="btn btn-view" onclick="deleteApplication('${application.workorderid}')">删除</button>
-				        </div>
-				    </td>
-				</tr>`;
-
+		        let row = `<tr data-workorderid="${application.workorderid}">
+		            <td>${application.workorderid}</td>
+                    <td>${application.cmuid}</td>
+		            <td>${username}</td>
+		            <td>${application.carid}</td>
+		            <td>${startTime}</td>
+		            <td>${finishedTime}</td>
+		            <td>${statusOptions}</td>
+		            <td>
+		                <div class="button-container">
+		                    <button class="btn btn-view" onclick="viewApplication('${application.workorderid}')">查看</button>
+		                    ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.workorderid}')">修改</button>` : ''}
+		                    <button class="btn btn-view" onclick="deleteApplication('${application.workorderid}')">删除</button>
+		                </div>
+		            </td>
+		        </tr>`;
 
 		        tbody.append(row);
-		    });
+		    }
 		}
-
 
 		// 修改按钮点击事件
 		function editApplication(workorderid) {

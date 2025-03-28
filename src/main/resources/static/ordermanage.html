@@ -204,7 +204,7 @@
         <div class="search-box">
             <select id="search-field">
                 <option value="orderid">订单ID</option>
-                <option value="uid">用户ID</option>
+                <option value="uid">车主</option>
                 <option value="status">状态</option>
             </select>
             <input type="text" id="search-input" placeholder="请输入搜索内容" />
@@ -216,7 +216,8 @@
             <thead>
                 <tr>
                     <th>订单ID</th>
-                    <th>用户ID</th>
+                    <th>车主</th>
+                    <th>车牌号</th>
                     <th>金额</th>
                     <th>开始时间</th>
                     <th>完成时间</th>
@@ -281,7 +282,7 @@
 		    $.ajax({
 		        url: '/cmorder/myorder',
 		        type: 'GET',
-		        success: function (data) {
+		        success: async function (data) {
 		            filteredApplications = data;
 		            const startIndex = (page - 1) * itemsPerPage;
 		            const endIndex = Math.min(startIndex + itemsPerPage, filteredApplications.length);
@@ -289,13 +290,32 @@
 
 		            const tbody = $("#application-table tbody");
 		            tbody.empty();
-		            applicationsToShow.forEach(function(application) {
+		            
+		            for(const application of applicationsToShow) {
 		                const startTime = new Date(application.starttime).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
 		                const finishedTime = new Date(application.finishedtime).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
 
+		                // 获取用户名
+		                let username = '';
+		                try {
+		                    const response = await fetch(`/cmusr/find/${application.uid}`, {
+		                        method: 'GET',
+		                        headers: {
+		                            'Postman-Token': 'd6f2de0b-26da-4800-a35f-d1c7d257c5a1',
+		                            'cache-control': 'no-cache'
+		                        }
+		                    });
+		                    const userData = await response.json();
+		                    username = userData.username;
+		                } catch(error) {
+		                    console.error('获取用户名失败:', error);
+		                    username = application.uid; // 如果获取失败则显示用户ID
+		                }
+
 		                const row = `<tr>
 		                    <td>${application.orderid}</td>
-		                    <td>${application.uid}</td>
+		                    <td>${username}</td>
+		                    <td>${application.carid}</td>
 		                    <td>${application.money}</td>
 		                    <td>${startTime}</td>
 		                    <td>${finishedTime}</td>
@@ -308,7 +328,7 @@
 		                    <td><button class="btn-pay" onclick="pay('${application.orderid}', '${application.uid}', '${application.money}', '${startTime}', '${finishedTime}', '${application.status}')">支付</button></td>
 		                </tr>`;
 		                tbody.append(row);
-		            });
+		            }
 
 		            updatePagination(page);
 		        },

@@ -92,6 +92,7 @@ public class workorderop {
 				newcmorder.setOrderid("OD" + timestamp);
 				newcmorder.setUid(row.getUid());
 				newcmorder.setMoney(money);
+				newcmorder.setCarid(demo.getCarid());
 				newcmorder.setStarttime(row.getStarttime());
 				newcmorder.setStatus("处理中");
 				
