@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.carmanage.dao.cmusr;
 import com.carmanage.Mapper.*;
@@ -86,8 +87,10 @@ public class userop {
 		}
     	
     	List<cmusr> all = cmusrMapper.selectAll();
+
+        row.setAuthority(row.getAuthority());
+
     	
-    	row.setAuthority(1);
     	int maxUid = all.stream().mapToInt(cmusr::getUid).max().orElse(0);
     	row.setUid(maxUid+1);
     	if (cmusrMapper.insert(row) == 1) {

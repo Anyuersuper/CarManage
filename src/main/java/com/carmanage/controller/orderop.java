@@ -65,5 +65,12 @@ public class orderop {
     public List<cmorder> selectByCarid(@RequestParam String carid) {
         return cmorderMapper.selectByCarid(carid);
     }
+
+
+    //查找一个记录根据selectByPrimaryKey
+    @GetMapping("/find/{orderid}")
+    public cmorder selectByPrimaryKey(@PathVariable String orderid) {
+        return cmorderMapper.selectByPrimaryKey(orderid);
+    }
 	
 }
