@@ -20,4 +20,5 @@ public interface cmsubMapper {
     List<cmsub> selectAll();
     
     List<cmsub> selectByUid(int uid);
+    List<cmsub> selectByCarid(String carid);
 }

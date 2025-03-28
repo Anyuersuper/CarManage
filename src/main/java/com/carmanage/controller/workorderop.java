@@ -73,7 +73,11 @@ public class workorderop {
     	return cmworkorderMapper.deleteByPrimaryKey(workorderid);
     }
 	
-    
+    //查找记录根据selectByCarid
+    @GetMapping("/selectone")
+    public List<cmworkorder> selectByCarid(@RequestParam String carid) {
+        return cmworkorderMapper.selectByCarid(carid);
+    }
     
     //修改一个记录
     @PostMapping("/update/{money}")

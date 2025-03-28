@@ -37,6 +37,13 @@
 	<include refid="Base_Column_List" />
 	from cm_workorder
   </select>
+  <select id="selectByCarid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_workorder
+    where carid = #{carid,jdbcType=VARCHAR}
+</select>
+
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from cm_workorder
