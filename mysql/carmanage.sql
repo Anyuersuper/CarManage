@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 27/03/2025 10:17:44
+ Date: 29/03/2025 04:38:26
 */
 
 SET NAMES utf8mb4;
@@ -35,10 +35,10 @@ CREATE TABLE `cm_car`  (
 -- ----------------------------
 -- Records of cm_car
 -- ----------------------------
-INSERT INTO `cm_car` VALUES ('重庆1', 1, '奔驰', '2025-03', '正常');
-INSERT INTO `cm_car` VALUES ('重庆2', 1, '劳斯莱斯', '2025-03', '正常');
-INSERT INTO `cm_car` VALUES ('重庆3', 1, '兰博基尼', '2024-01', '正常');
-INSERT INTO `cm_car` VALUES ('重庆8', 1, '奔驰', '2000-5', '正常');
+INSERT INTO `cm_car` VALUES ('京A9999', 1, '兰博基尼', '2024-05', '正常');
+INSERT INTO `cm_car` VALUES ('川A6666', 1, '奔驰', '2025-03', '正常');
+INSERT INTO `cm_car` VALUES ('广A5555', 1, '劳斯莱斯', '2025-05', '正常');
+INSERT INTO `cm_car` VALUES ('重A1234', 1, '长安福特1', '2025-01', '正常');
 
 -- ----------------------------
 -- Table structure for cm_order
@@ -62,6 +62,7 @@ CREATE TABLE `cm_order`  (
 -- ----------------------------
 -- Records of cm_order
 -- ----------------------------
+INSERT INTO `cm_order` VALUES ('OD1743191715268', NULL, 1, 355, '2025-03-29 19:48:16', '2025-03-29 03:55:21.289000', '已完成');
 
 -- ----------------------------
 -- Table structure for cm_pic
@@ -79,7 +80,12 @@ CREATE TABLE `cm_pic`  (
 -- ----------------------------
 -- Records of cm_pic
 -- ----------------------------
-INSERT INTO `cm_pic` VALUES ('img1743039909573', 'SQ1743039909571', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743039909573_5d722d4fedbba.jpg');
+INSERT INTO `cm_pic` VALUES ('img1743191274429', 'SQ1743191274419', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743191274429_1_broken.png');
+INSERT INTO `cm_pic` VALUES ('img1743192083446', 'SQ1743192083441', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743192083446_4_broken.png');
+INSERT INTO `cm_pic` VALUES ('img1743192083457', 'SQ1743192083441', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743192083457_3_broken.png');
+INSERT INTO `cm_pic` VALUES ('img1743192083462', 'SQ1743192083441', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743192083462_2_broken.png');
+INSERT INTO `cm_pic` VALUES ('img1743193309978', 'SQ1743193309973', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743193309978_4_broken.png');
+INSERT INTO `cm_pic` VALUES ('img1743193309984', 'SQ1743193309973', 'C:/Users/Yuer/Documents/workspace-spring-tool-suite-4-4.22.1.RELEASE/carmanage/src/main/resources/static/image/img1743193309984_3_broken.png');
 
 -- ----------------------------
 -- Table structure for cm_sub
@@ -101,7 +107,10 @@ CREATE TABLE `cm_sub`  (
 -- ----------------------------
 -- Records of cm_sub
 -- ----------------------------
-INSERT INTO `cm_sub` VALUES ('SQ1743039909571', 1, '重庆1', '车灯损坏', '已通过');
+INSERT INTO `cm_sub` VALUES ('SQ1743191274419', 1, '京A9999', '车灯损坏', '已通过');
+INSERT INTO `cm_sub` VALUES ('SQ1743192083441', 1, '川A6666', '后视镜损坏', '已通过');
+INSERT INTO `cm_sub` VALUES ('SQ1743193309973', 1, '广A5555', '车灯损坏', '审批中');
+INSERT INTO `cm_sub` VALUES ('SQ1743193341748', 1, '重A1234', '座椅损坏', '审批中');
 
 -- ----------------------------
 -- Table structure for cm_usr
@@ -119,10 +128,11 @@ CREATE TABLE `cm_usr`  (
 -- ----------------------------
 -- Records of cm_usr
 -- ----------------------------
-INSERT INTO `cm_usr` VALUES (3, '3', '3', 3);
 INSERT INTO `cm_usr` VALUES (1, 'admin', 'admin', 4);
-INSERT INTO `cm_usr` VALUES (4, 'ceshi', '12345678a', 1);
-INSERT INTO `cm_usr` VALUES (2, 'liuhua', 'liuhua', 2);
+INSERT INTO `cm_usr` VALUES (4, 'liuhua', '1', 1);
+INSERT INTO `cm_usr` VALUES (2, 'shenpi', '1', 2);
+INSERT INTO `cm_usr` VALUES (3, 'weixiu', '1', 3);
+INSERT INTO `cm_usr` VALUES (5, 'weixiu1', '1', 3);
 
 -- ----------------------------
 -- Table structure for cm_workorder
@@ -148,7 +158,7 @@ CREATE TABLE `cm_workorder`  (
 -- ----------------------------
 -- Records of cm_workorder
 -- ----------------------------
-INSERT INTO `cm_workorder` VALUES ('GD1742998811575', 1, 3, NULL, '2025-03-26 22:20:12', NULL, '处理中');
-INSERT INTO `cm_workorder` VALUES ('GD1743041283161', 1, 3, NULL, '2025-03-27 10:08:03', NULL, '处理中');
+INSERT INTO `cm_workorder` VALUES ('GD1743191295959', 1, 3, '京A9999', '2025-03-29 19:48:16', '2025-03-29 03:55:15', '已完成');
+INSERT INTO `cm_workorder` VALUES ('GD1743192520182', 1, 3, '川A6666', '2025-03-29 04:08:40', NULL, '处理中');
 
 SET FOREIGN_KEY_CHECKS = 1;
