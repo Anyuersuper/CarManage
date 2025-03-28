@@ -389,7 +389,7 @@
 		    })
 		    .then(data => {
 		        alert("支付成功！");
-		        loadApplications(currentPage);
+		        window.location.href="/ordermanage.html"
 		    })
 		    .catch(error => {
 		        console.error('Payment error:', error);

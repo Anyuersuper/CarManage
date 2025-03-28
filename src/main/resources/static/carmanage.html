@@ -509,7 +509,7 @@
 	      <form id="editVehicleForm">
 	        <div class="form-group">
 	          <label for="editLicensePlate">车牌号:</label>
-	          <input type="text" id="editLicensePlate" name="editLicensePlate" required>
+	          <input type="text" id="editLicensePlate" name="editLicensePlate" readonly style="background-color: #f5f5f5;">
 	        </div>
 	        <div class="form-group">
 	          <label for="editVehicleName">车辆名称:</label>
@@ -688,66 +688,106 @@
 			
 			// 编辑车辆弹窗控制
 			function editModalOpen(carid) {
-			  // 根据车ID获取当前车辆数据
-			  car = cars.find(c => c.carid === carid);
-			  document.getElementById("editLicensePlate").value=car.carid;
-			  document.getElementById("editVehicleName").value=car.kind;
-			  document.getElementById("editYear").value=car.year;
-			  document.getElementById('editVehicleFormModal').style.display = 'flex';
+			    // 根据车ID获取当前车辆数据
+			    car = cars.find(c => c.carid === carid);
+			    if (car) {
+			        // 填充表单
+			        document.getElementById("editLicensePlate").value = car.carid;
+			        document.getElementById("editVehicleName").value = car.kind;
+			        document.getElementById("editYear").value = car.year;
+			        
+			        // 更新状态和关联信息
+			        document.getElementById("editStatus").textContent = car.status || '正常';
+			        
+			        // 清空其他关联信息
+			        document.getElementById("editRelatedRequest").textContent = '暂无';
+			        document.getElementById("editRelatedRequestStatus").textContent = '暂无';
+			        document.getElementById("editRelatedWorkOrder").textContent = '暂无';
+			        document.getElementById("editRelatedWorkOrderStatus").textContent = '暂无';
+			        document.getElementById("editRelatedBill").textContent = '暂无';
+			        document.getElementById("editRelatedBillStatus").textContent = '暂无';
+			        
+			        // 获取关联的申请信息
+			        fetch(`/cmsub/find/${carid}`, {
+			            method: 'GET',
+			            headers: {
+			                'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
+			                'cache-control': 'no-cache'
+			            }
+			        })
+			        .then(response => response.json())
+			        .then(data => {
+			            if (data && data.length > 0) {
+			                const latestSub = data[0]; // 获取最新的申请
+			                document.getElementById("editRelatedRequest").textContent = latestSub.subid;
+			                document.getElementById("editRelatedRequestStatus").textContent = latestSub.status;
+			            }
+			        })
+			        .catch(error => console.error('获取申请信息失败:', error));
+
+			        // 显示编辑弹窗
+			        document.getElementById('editVehicleFormModal').style.display = 'flex';
+			    } else {
+			        alert('未找到车辆信息！');
+			    }
 			}
 
 			function editModalClose() {
-			  document.getElementById('editVehicleFormModal').style.display = 'none';
+			    document.getElementById('editVehicleFormModal').style.display = 'none';
 			}
 
 			function confirmEditOpen() {
-			  document.getElementById('editConfirmationModal').style.display = 'flex';
+			    document.getElementById('editConfirmationModal').style.display = 'flex';
 			}
 
 			function confirmEditClose() {
-			  document.getElementById('editConfirmationModal').style.display = 'none';
+			    document.getElementById('editConfirmationModal').style.display = 'none';
 			}
+
 			function submitEdit() {
 			    // 获取用户输入的值
-			    var carid = document.getElementById("editLicensePlate").value;
-			    var kind = document.getElementById("editVehicleName").value;
-			    var year = document.getElementById("editYear").value;
+			    const editedCar = {
+			        carid: document.getElementById("editLicensePlate").value,
+			        kind: document.getElementById("editVehicleName").value,
+			        year: document.getElementById("editYear").value,
+			        status: car.status || '正常',
+			        uid: car.uid
+			    };
 
-			    // 控制台打印检查输入
-			    console.log(carid, kind, year);
-
-			    // 检查输入是否有效
-			    if (!carid || !kind || !year) {
-			        alert("请填写所有必填项！");
-			        return; // 如果某个字段为空，则退出函数
+			    // 验证输入
+			    if (!editedCar.carid || !editedCar.kind || !editedCar.year) {
+			        alert('请填写所有必填字段！');
+			        return;
 			    }
 
-			    // 确保变量 car 已定义并且包含数据
-			    if (car) {
-			        // 更新车辆对象
-			        car.carid = carid;
-			        car.kind = kind;
-			        car.year = year;
-
-			        // 发送更新请求到后端
-			        $.ajax({
-			            url: `/cmcar/update`,
-			            type: 'POST',
-			            contentType: 'application/json',
-			            data: JSON.stringify(car),
-			            success: function(response) {
-			                fetchCars();  // 重新加载数据
-							window.location.href="/carmanage.html"
-			            },
-			            error: function() {
-			                alert("更新车辆信息失败！");
-			            }
-			        });
-			    } else {
-			        alert("未找到车辆信息！");
-			    }
+			    // 发送更新请求到后端
+			    fetch('/cmcar/update', {
+			        method: 'POST',
+			        headers: {
+			            'Content-Type': 'application/json',
+			            'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
+			            'cache-control': 'no-cache'
+			        },
+			        body: JSON.stringify(editedCar)
+			    })
+			    .then(response => response.json())
+			    .then(data => {
+			        if (data === 1) {
+			            alert('车辆信息更新成功！');
+			            // 关闭所有弹窗
+			            document.getElementById('editVehicleFormModal').style.display = 'none';
+			            document.getElementById('editConfirmationModal').style.display = 'none';
+			            // 重新加载数据
+			            fetchCars();
+			        } else {
+			            alert('更新失败，请重试！');
+			        }
+			    })
+			    .catch(error => {
+			        console.error('更新失败:', error);
+			        alert('更新失败，请重试！');
+			    });
 			}
-
 			
 			// 渲染表格数据
 			function renderTable() {

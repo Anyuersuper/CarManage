@@ -84,6 +84,7 @@ public class workorderop {
     public int updateByPrimaryKey(@RequestBody  cmworkorder row, @PathVariable Integer money) 
     {
     	cmworkorder demo = cmworkorderMapper.selectByPrimaryKey(row.getWorkorderid());
+		String carid = demo.getCarid();
     	if (demo.getStatus().equals("已完成")) {
 			return cmworkorderMapper.updateByPrimaryKey(row);
 		}
@@ -96,7 +97,7 @@ public class workorderop {
 				newcmorder.setOrderid("OD" + timestamp);
 				newcmorder.setUid(row.getUid());
 				newcmorder.setMoney(money);
-				newcmorder.setCarid(demo.getCarid());
+				newcmorder.setCarid(carid);
 				newcmorder.setStarttime(row.getStarttime());
 				newcmorder.setStatus("处理中");
 				
@@ -117,6 +118,12 @@ public class workorderop {
     	
     }
     
+
+	//查找一个记录根据workorderid
+	@GetMapping("find/{workorderid}")
+	public cmworkorder findByPrimaryKey(@PathVariable String workorderid) {
+		return cmworkorderMapper.selectByPrimaryKey(workorderid);
+	}
 	
 
 }

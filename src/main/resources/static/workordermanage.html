@@ -912,9 +912,7 @@
 		        .then(data => {
 		            if (data === 1) {
 		                alert("工单更新成功！");
-		                document.getElementById('editConfirmationModal').style.display = 'none';
-		                document.getElementById('editFormModal').style.display = 'none';
-		                loadApplications(currentPage); // 重新加载数据
+		                window.location.href="/workordermanage.html"
 		            } else {
 		                alert("工单更新失败！");
 		            }
@@ -949,7 +947,7 @@
 		            success: function (response) {
 		                if (response === 1) {
 		                    alert("工单删除成功！");
-		                    loadApplications(currentPage);
+		                    window.location.href="/workordermanage.html"
 		                } else {
 		                    alert("工单删除失败！");
 		                }

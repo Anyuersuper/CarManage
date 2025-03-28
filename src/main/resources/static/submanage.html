@@ -456,6 +456,11 @@
             border-radius: 5px;
             flex-shrink: 1; /* 允许图片缩小 */
             max-width: 100%; /* 限制最大宽度 */
+            display: none; /* 默认隐藏所有图片 */
+        }
+
+        #view-images img.visible {
+            display: block; /* 显示具有visible类的图片 */
         }
 
         /* 根据图片数量调整布局 */
@@ -475,17 +480,6 @@
             width: calc(33.33% - 7px); /* 减去间距 */
             max-width: 120px;
             max-height: 120px;
-        }
-
-        /* 修改弹窗内图片容器的表单组样式 */
-        .form-group:has(#view-images) {
-            flex-direction: column; /* 改为垂直布局 */
-            align-items: flex-start; /* 左对齐 */
-        }
-
-        .form-group:has(#view-images) label {
-            margin-bottom: 10px; /* 标签和图片容器之间的间距 */
-            width: auto; /* 重置标签宽度 */
         }
 
         /* 修改一级弹窗按钮容器样式 */
@@ -561,6 +555,15 @@
             background-color: #f44336;
             color: white;
             min-width: 80px;
+        }
+
+        /* 新增图片容器的显示/隐藏样式 */
+        .form-group.images-group {
+            display: none; /* 默认隐藏整个图片组 */
+        }
+
+        .form-group.images-group.visible {
+            display: flex; /* 当有图片时显示 */
         }
     </style>
 </head>
@@ -671,14 +674,11 @@
                     </select>
                 </div>
 
-
                 <!-- 维修员工 -->
                 <div class="form-group">
                     <label for="edit-fixid">维修员工:</label>
-                    <select id="edit-status" name="edit-status" required>
-                        <option value="uid">3</option>
-                        <option value="uid">未通过</option>
-                        <option value="uid">已通过</option>
+                    <select id="edit-fixid" name="edit-fixid" required>
+                        <!-- 维修人员选项将通过 JavaScript 动态添加 -->
                     </select>
                 </div>
 
@@ -739,12 +739,12 @@
                 </div>
 
                 <!-- 图片展示区域 -->
-                <div class="form-group">
+                <div class="form-group images-group">
                     <label>相关图片:</label>
                     <div id="view-images" class="three-images">
-                        <img src="http://www.anyuer.club/zb_users/avatar/0.png" alt="示例图片1">
-                        <img src="http://www.anyuer.club/zb_users/avatar/0.png" alt="示例图片2">
-                        <img src="http://www.anyuer.club/zb_users/avatar/0.png" alt="示例图片3">
+                        <img src="" alt="维修图片1">
+                        <img src="" alt="维修图片2">
+                        <img src="" alt="维修图片3">
                     </div>
                 </div>
 
@@ -882,11 +882,10 @@
                 .then(data => {
                     if (data === 1) {
                         alert('申请提交成功！');
+                        window.location.href="/submanage.html"
                     } else {
                         alert('申请提交失败！');
                     }
-                    confirmationModal.style.display = 'none'; // 关闭确认弹窗
-                    vehicleFormModal.style.display = 'none'; // 关闭提交申请弹窗
                 })
                 .catch(error => {
                     console.error('提交申请失败:', error);
@@ -997,7 +996,7 @@
                         <td>
                             <div class="button-container">
                                 <button class="btn btn-view" onclick="viewApplication('${application.subid}')">查看</button>
-                                ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.subid}')">修改</button>` : ''}
+                                ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.subid}')">审核</button>` : ''}
                                 <button class="btn btn-view" style="background-color:#0056b3;" onclick="deletesub('${application.subid}')">撤回</button>
                             </div>
                         </td>
@@ -1032,12 +1031,51 @@
             document.getElementById('view-issue').value = contentSelect.value;
             document.getElementById('view-status').value = statusSelect.value;
 
-            // 设置图片容器的类名根据图片数量
-            const imageContainer = document.getElementById('view-images');
-            const imageCount = 3; // 示例数量，实际应该是动态的
-            imageContainer.className = imageCount === 1 ? 'single-image' : 
-                                     imageCount === 2 ? 'two-images' : 
-                                     'three-images';
+            // 获取并显示图片
+            fetch(`/cmpic/find/${subid}`, {
+                method: 'GET',
+                headers: {
+                    'Postman-Token': '1254e0f5-cc52-40fb-ae72-3e7e68719522',
+                    'cache-control': 'no-cache'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const imageContainer = document.getElementById('view-images');
+                const imagesGroup = document.querySelector('.form-group.images-group');
+                const images = imageContainer.getElementsByTagName('img');
+                
+                // 首先隐藏所有图片和图片组
+                imagesGroup.classList.remove('visible');
+                Array.from(images).forEach(img => {
+                    img.classList.remove('visible');
+                    img.src = '';
+                });
+
+                // 如果有图片数据，则显示图片组
+                if (data && data.length > 0) {
+                    imagesGroup.classList.add('visible');
+                    
+                    // 根据返回的图片数量设置容器类名
+                    imageContainer.className = data.length === 1 ? 'single-image' : 
+                                            data.length === 2 ? 'two-images' : 
+                                            'three-images';
+
+                    // 设置图片源并显示
+                    data.forEach((pic, index) => {
+                        if (index < 3) { // 最多显示3张图片
+                            const img = images[index];
+                            // 从filepath中提取图片文件名
+                            const filename = pic.filepath.split('/').pop();
+                            img.src = `/image/${filename}`; // 设置图片源
+                            img.classList.add('visible');
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('获取图片失败:', error);
+            });
 
             // 显示查看弹窗
             document.getElementById('viewFormModal').style.display = 'flex';
@@ -1093,17 +1131,54 @@
             let contentSelect = row.querySelector('.content-select');
             let statusSelect = row.querySelector('.status-select');
             let carId = row.cells[2].textContent;
-            let userId = row.cells[1].textContent; // 获取用户ID
+            let userId = row.cells[1].textContent;
+
+            // 加载维修人员列表
+            loadRepairStaff();
 
             // 填充编辑表单
             document.getElementById('edit-subid').value = subid;
-            document.getElementById('edit-uid').value = userId; // 设置用户ID
-            document.getElementById('edit-vehicle').value = carId; // 直接设置车辆ID
+            document.getElementById('edit-uid').value = userId;
+            document.getElementById('edit-vehicle').value = carId;
             document.getElementById('edit-issue').value = contentSelect.value;
             document.getElementById('edit-status').value = statusSelect.value;
 
             // 显示编辑弹窗
             editFormModal.style.display = 'flex';
+        }
+
+        // 加载维修人员列表
+        function loadRepairStaff() {
+            fetch('/cmusr/weixiu', {
+                method: 'GET',
+                headers: {
+                    'Postman-Token': '675e7114-5dbd-4127-9114-30828e8dee66',
+                    'cache-control': 'no-cache'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const fixidSelect = document.getElementById('edit-fixid');
+                fixidSelect.innerHTML = ''; // 清空现有选项
+
+                // 添加一个默认选项
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '请选择维修人员';
+                fixidSelect.appendChild(defaultOption);
+
+                // 添加维修人员选项
+                data.forEach(staff => {
+                    const option = document.createElement('option');
+                    option.value = staff.uid;
+                    option.textContent = `${staff.username} (ID: ${staff.uid})`;
+                    fixidSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('获取维修人员列表失败:', error);
+                alert('获取维修人员列表失败，请重试');
+            });
         }
 
         // 关闭编辑弹窗
@@ -1126,7 +1201,8 @@
             const subid = document.getElementById('edit-subid').value;
             const newContent = document.getElementById('edit-issue').value;
             const newStatus = document.getElementById('edit-status').value;
-            const carId = document.getElementById('edit-vehicle').value; // 获取车辆ID
+            const carId = document.getElementById('edit-vehicle').value;
+            const fixId = document.getElementById('edit-fixid').value;
 
             // 发送更新请求到后端
             fetch('/cmsub/update', {
@@ -1140,15 +1216,15 @@
                     subid: subid,
                     content: newContent,
                     status: newStatus,
-                    carid: carId
+                    carid: carId,
+                    fixid: fixId  // 添加维修人员ID
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data === 1) {
                     alert("申请记录已更新！");
-                    editConfirmationModal.style.display = 'none';
-                    editFormModal.style.display = 'none';
+                    window.location.href="/submanage.html"
                     loadApplications(currentPage);
                 } else {
                     alert("更新失败，请重试！");

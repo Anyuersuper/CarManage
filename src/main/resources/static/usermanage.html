@@ -588,7 +588,8 @@
 		username = document.getElementById("username").value ;
 		password = document.getElementById("password").value;
 		rpassword = document.getElementById("rpassword").value;
-		if(password === rpassword){
+        quanxian = document.getElementById("userRole").value;
+		if(password == rpassword){
 			console.log("passok");
 		}
 		else{
@@ -596,7 +597,8 @@
 		}
 		var user = {
             username: username,
-            password: password
+            password: password,
+            authority:quanxian
         };
 		
 		$.ajax({
@@ -607,9 +609,7 @@
 	    success: function(response) {
 	        alert(response); // 提示注册成功或失败的消息
 	        if (response === "注册成功！") {
-	            fetchUsers(); // 如果注册成功，重新加载用户数据
-				onetcclose();
-				twotcclose();
+                window.location.href="/usermanage.html"
 	        }
 	    },
 	    error: function() {
@@ -745,7 +745,7 @@
                 type: "GET",
                 success: function() {
                     alert("删除成功！");
-                    fetchUsers();
+                    window.location.href="/usermanage.html"
                 },
                 error: function() {
                     alert("删除失败！");
