@@ -203,6 +203,52 @@
 		
 		
 
+        /* 修改弹窗样式统一 */
+        #editFormModal .modal-content,
+        #vehicleFormModal .modal-content {
+            width: 360px;
+            padding: 20px;
+        }
+
+        /* 确认弹窗样式统一 */
+        #editConfirmationModal .modal-content,
+        #confirmationModal .modal-content {
+            width: 300px;
+            text-align: center;
+        }
+
+        #editConfirmationModal .modal-content .button-container,
+        #confirmationModal .modal-content .button-container {
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* 确认弹窗按钮样式统一 */
+        .confirmation-modal .modal-content .button-container button {
+            padding: 8px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        /* 取消和确认按钮样式统一 */
+        #cancelEditConfirmation,
+        #cancelConfirmation,
+        #closeFormButton {
+            background-color: #f44336;
+            color: white;
+        }
+
+        #confirmEdit,
+        #confirmAdd,
+        #confirmButton {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+        }
+
         /* 导航栏样式 */
         .navbar {
             width: 100%;
@@ -449,6 +495,81 @@
             margin-bottom: 10px; /* 标签和图片容器之间的间距 */
             width: auto; /* 重置标签宽度 */
         }
+
+        /* 修改一级弹窗按钮容器样式 */
+        #vehicleFormModal .button-container,
+        #editFormModal .button-container {
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        /* 修改一级弹窗的按钮样式 */
+        #vehicleFormModal .button-container button,
+        #editFormModal .button-container button {
+            min-width: 80px;  /* 设置最小宽度 */
+            font-size: 14px;  /* 调整字体大小 */
+            white-space: nowrap;  /* 防止文字换行 */
+            line-height: 1.5;  /* 调整行高 */
+            padding: 6px 12px;  /* 调整内边距 */
+            margin: 0 5px;  /* 调整外边距 */
+        }
+
+        #closeFormButton,
+        #closeEditFormButton {
+            margin-right: 10px !important;  /* 强制应用右边距 */
+        }
+
+        /* 统一所有二级确认弹窗的样式 */
+        #confirmationModal .modal-content,
+        #editConfirmationModal .modal-content,
+        #deleteConfirmationModal .modal-content {
+            width: 300px;  /* 统一宽度 */
+            text-align: center;
+            padding: 20px;
+        }
+
+        #confirmationModal .modal-content .button-container,
+        #editConfirmationModal .modal-content .button-container,
+        #deleteConfirmationModal .modal-content .button-container {
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #confirmationModal .modal-content h2,
+        #editConfirmationModal .modal-content h2,
+        #deleteConfirmationModal .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        #confirmationModal .modal-content p,
+        #editConfirmationModal .modal-content p,
+        #deleteConfirmationModal .modal-content p {
+            margin: 20px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* 统一二级确认弹窗按钮样式 */
+        #confirmAdd,
+        #confirmEdit,
+        #confirmDelete {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+            min-width: 80px;
+        }
+
+        /* 统一取消按钮样式 */
+        #cancelDelete,
+        #cancelConfirmation,
+        #cancelEditConfirmation {
+            background-color: #f44336;
+            color: white;
+            min-width: 80px;
+        }
     </style>
 </head>
 <body>
@@ -640,6 +761,18 @@
                     <button type="button" id="closeViewFormButton" style="background: #f44336; margin-left: 78%;">关闭</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- 撤回确认弹窗 -->
+    <div id="deleteConfirmationModal" class="confirmation-modal">
+        <div class="modal-content">
+            <h2>确认撤回</h2>
+            <p>确认撤回这个申请吗？</p>
+            <div class="button-container">
+                <button type="button" id="cancelDelete" style="background: #f44336;">取消</button>
+                <button type="button" id="confirmDelete" style="background: linear-gradient(to right, #4CAF50, #45a049);">确认</button>
+            </div>
         </div>
     </div>
 
@@ -866,24 +999,10 @@
 		}
 
 		function deletesub(subid) {
-		    fetch(`/cmsub/delete/${subid}`, {
-		        method: 'GET',
-		        headers: {
-		            'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
-		            'cache-control': 'no-cache'
-		        }
-		    })
-		    .then(response => response.json())  // 假设响应是 JSON 格式
-		    .then(data => {
-		        console.log('删除成功:', data);
-		        // 如果删除成功，从页面中移除该行
-		        document.getElementById(`row-${subid}`).remove();  // 根据 subid 移除对应的行
-		        alert("申请已撤回！");
-		    })
-		    .catch(error => {
-		        console.error('删除失败:', error);
-		        alert("删除失败，请重试！");
-		    });
+		    // 保存当前要撤回的申请ID
+		    window.currentDeleteId = subid;
+		    // 显示确认弹窗
+		    document.getElementById('deleteConfirmationModal').style.display = 'flex';
 		}
 
 		// 查看按钮点击事件，显示查看申请弹窗
@@ -1084,8 +1203,40 @@
 		$(document).ready(function() {
 		    checkLogin();
 		    showGreeting();
-		});
 
+		    // 获取撤回确认弹窗相关元素
+		    const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+		    const cancelDeleteButton = document.getElementById('cancelDelete');
+		    const confirmDeleteButton = document.getElementById('confirmDelete');
+
+		    // 取消撤回
+		    cancelDeleteButton.addEventListener('click', function() {
+		        deleteConfirmationModal.style.display = 'none';
+		    });
+
+		    // 确认撤回
+		    confirmDeleteButton.addEventListener('click', function() {
+		        const subid = window.currentDeleteId;
+		        fetch(`/cmsub/delete/${subid}`, {
+		            method: 'GET',
+		            headers: {
+		                'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
+		                'cache-control': 'no-cache'
+		            }
+		        })
+		        .then(response => response.json())
+		        .then(data => {
+		            console.log('撤回成功:', data);
+		            document.getElementById(`row-${subid}`).remove();
+		            alert("申请已撤回！");
+		        })
+		        .catch(error => {
+		            console.error('撤回失败:', error);
+		            alert("撤回失败，请重试！");
+		        });
+		        deleteConfirmationModal.style.display = 'none';
+		    });
+		});
 </script>
 </body>
 </html>

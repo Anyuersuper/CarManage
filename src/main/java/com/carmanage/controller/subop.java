@@ -143,6 +143,7 @@ public class subop {
     			long timestamp = now.toEpochMilli();
     			cmworkorderrow.setWorkorderid( "GD"  +  timestamp );
     			cmworkorderrow.setUid(demo.getUid());
+                cmworkorderrow.setCarid(demo.getCarid());
     			cmworkorderrow.setCmuid(3);
     			long currentTimeMillis = System.currentTimeMillis();
     	        Date currentDate = new Date(currentTimeMillis);
