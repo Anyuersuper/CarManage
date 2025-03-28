@@ -400,7 +400,55 @@
 		    background-color: #0056b3;
 		}
 
+        /* 图片展示容器样式 */
+        #view-images {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-left: 0; /* 移除左边距 */
+            width: 100%; /* 使用全宽 */
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            box-sizing: border-box; /* 确保padding和border计入总宽度 */
+        }
 
+        #view-images img {
+            aspect-ratio: 1; /* 保持1:1的宽高比 */
+            object-fit: cover;
+            border-radius: 5px;
+            flex-shrink: 1; /* 允许图片缩小 */
+            max-width: 100%; /* 限制最大宽度 */
+        }
+
+        /* 根据图片数量调整布局 */
+        #view-images.single-image img {
+            width: 100%;
+            max-width: 200px; /* 限制最大尺寸 */
+            max-height: 200px;
+        }
+
+        #view-images.two-images img {
+            width: calc(50% - 5px); /* 减去间距的一半 */
+            max-width: 150px;
+            max-height: 150px;
+        }
+
+        #view-images.three-images img {
+            width: calc(33.33% - 7px); /* 减去间距 */
+            max-width: 120px;
+            max-height: 120px;
+        }
+
+        /* 修改弹窗内图片容器的表单组样式 */
+        .form-group:has(#view-images) {
+            flex-direction: column; /* 改为垂直布局 */
+            align-items: flex-start; /* 左对齐 */
+        }
+
+        .form-group:has(#view-images) label {
+            margin-bottom: 10px; /* 标签和图片容器之间的间距 */
+            width: auto; /* 重置标签宽度 */
+        }
     </style>
 </head>
 <body>
@@ -539,6 +587,59 @@
                 <button type="button" id="cancelEditConfirmation" style="background: #f44336;">取消</button>
                 <button type="button" id="confirmEdit" style="background: linear-gradient(to right, #4CAF50, #45a049);">确认</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 查看申请弹窗 -->
+    <div id="viewFormModal" class="modal">
+        <div class="modal-content">
+            <h2>查看申请</h2>
+            <form id="viewForm">
+                <!-- 申请ID -->
+                <div class="form-group">
+                    <label for="view-subid">申请ID:</label>
+                    <input type="text" id="view-subid" name="view-subid" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
+                </div>
+
+                <!-- 用户ID -->
+                <div class="form-group">
+                    <label for="view-uid">用户ID:</label>
+                    <input type="text" id="view-uid" name="view-uid" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
+                </div>
+                
+                <!-- 申请车辆 -->
+                <div class="form-group">
+                    <label for="view-vehicle">申请车辆:</label>
+                    <input type="text" id="view-vehicle" name="view-vehicle" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
+                </div>
+
+                <!-- 申请内容 -->
+                <div class="form-group">
+                    <label for="view-issue">申请内容:</label>
+                    <input type="text" id="view-issue" name="view-issue" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
+                </div>
+
+                <!-- 状态 -->
+                <div class="form-group">
+                    <label for="view-status">状态:</label>
+                    <input type="text" id="view-status" name="view-status" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
+                </div>
+
+                <!-- 图片展示区域 -->
+                <div class="form-group">
+                    <label>相关图片:</label>
+                    <div id="view-images" class="three-images">
+                        <img src="http://www.anyuer.club/zb_users/avatar/0.png" alt="示例图片1">
+                        <img src="http://www.anyuer.club/zb_users/avatar/0.png" alt="示例图片2">
+                        <img src="http://www.anyuer.club/zb_users/avatar/0.png" alt="示例图片3">
+                    </div>
+                </div>
+
+                <!-- 按钮容器 -->
+                <div class="button-container">
+                    <button type="button" id="closeViewFormButton" style="background: #f44336;">关闭</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -785,11 +886,37 @@
 		    });
 		}
 
-		// 查看按钮点击事件，跳转到 subdetail.html 页面
+		// 查看按钮点击事件，显示查看申请弹窗
 		function viewApplication(subid) {
-		    console.log("查看按钮被点击，subid:", subid);
-		    window.location.href = `/subdetail.html?subid=${subid}`;
+		    // 获取当前行数据
+		    let row = event.target.closest('tr');
+		    let contentSelect = row.querySelector('.content-select');
+		    let statusSelect = row.querySelector('.status-select');
+		    let carId = row.cells[2].textContent;
+		    let userId = row.cells[1].textContent;
+
+		    // 填充查看表单
+		    document.getElementById('view-subid').value = subid;
+		    document.getElementById('view-uid').value = userId;
+		    document.getElementById('view-vehicle').value = carId;
+		    document.getElementById('view-issue').value = contentSelect.value;
+		    document.getElementById('view-status').value = statusSelect.value;
+
+		    // 设置图片容器的类名根据图片数量
+		    const imageContainer = document.getElementById('view-images');
+		    const imageCount = 3; // 示例数量，实际应该是动态的
+		    imageContainer.className = imageCount === 1 ? 'single-image' : 
+		                             imageCount === 2 ? 'two-images' : 
+		                             'three-images';
+
+		    // 显示查看弹窗
+		    document.getElementById('viewFormModal').style.display = 'flex';
 		}
+
+		// 添加关闭查看弹窗的事件监听
+		document.getElementById('closeViewFormButton').addEventListener('click', function() {
+		    document.getElementById('viewFormModal').style.display = 'none';
+		});
 
 		// 根据搜索条件过滤申请数据
 		function filterApplications() {
