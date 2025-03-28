@@ -469,14 +469,22 @@
         <div class="modal-content">
             <h2>修改申请</h2>
             <form id="editForm">
-                <!-- 申请ID (隐藏) -->
-                <input type="hidden" id="edit-subid">
+                <!-- 申请ID -->
+                <div class="form-group">
+                    <label for="edit-subid">申请ID:</label>
+                    <input type="text" id="edit-subid" name="edit-subid" readonly style="background-color: #f5f5f5;margin-left: 20px;width: 60%;margin-left: 1px;">
+                </div>
+
+                <!-- 用户ID -->
+                <div class="form-group">
+                    <label for="edit-uid">用户ID:</label>
+                    <input type="text" id="edit-uid" name="edit-uid" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
+                </div>
                 
                 <!-- 申请车辆 -->
                 <div class="form-group">
                     <label for="edit-vehicle">申请车辆:</label>
-                    <select id="edit-vehicle" name="edit-vehicle" required>
-                    </select>
+                    <input type="text" id="edit-vehicle" name="edit-vehicle" readonly style="background-color: #f5f5f5;width: 60%;margin-left: 1px;">
                 </div>
 
                 <!-- 申请内容 -->
@@ -499,6 +507,17 @@
                         <option value="审批中">审批中</option>
                         <option value="未通过">未通过</option>
                         <option value="已通过">已通过</option>
+                    </select>
+                </div>
+
+
+				<!-- 维修员工 -->
+                <div class="form-group">
+                    <label for="edit-fixid">维修员工:</label>
+                    <select id="edit-status" name="edit-status" required>
+                        <option value="uid">3</option>
+                        <option value="uid">未通过</option>
+                        <option value="uid">已通过</option>
                     </select>
                 </div>
 
@@ -537,7 +556,6 @@
     <!-- 页面主要内容 -->
     <div class="container">
         <h1 id="greeting"></h1>
-
         <!-- 搜索框 -->
         <div class="search-box">
             <select id="search-field">
@@ -549,7 +567,6 @@
             <input type="text" id="search-input" placeholder="请输入搜索内容" />
             <button onclick="searchApplications()">搜索</button>
 			<button onclick="onetcopen()">提交申请</button>
-
         </div>
 
         <!-- 申请管理表格 -->
@@ -575,7 +592,6 @@
             <button id="next-page" onclick="changePage(1)">下一页</button>
         </div>
     </div>
-
     <script>
 		// 每页显示10条数据
 		const itemsPerPage = 10;
@@ -591,11 +607,9 @@
 	    const confirmAddButton = document.getElementById('confirmAdd');
 	    const imagePreview = document.getElementById('imagePreview');
 			getcar();
-
 			function onetcopen(){
 				vehicleFormModal.style.display = 'flex';
-			}
-			
+			}  
 		    // 关闭提交申请弹窗
 		    closeFormButton.addEventListener('click', function() {
 		      vehicleFormModal.style.display = 'none';
@@ -656,10 +670,6 @@
 				fileInput.value = ''; // 清空选中的文件
 			});
 
-
-
-
-			
 			function getcar(){
 				fetch("/cmcar/mycar", {
 					    method: "GET",
@@ -672,7 +682,6 @@
 					    .then(data => {
 					      const vehicleSelect = document.getElementById("vehicle");
 					      vehicleSelect.innerHTML = ""; // 清空原有选项
-			
 					      data.forEach(vehicle => {
 					        const option = document.createElement("option");
 					        option.value = vehicle.carid;
@@ -683,8 +692,6 @@
 					    .catch(error => console.error("获取车辆数据失败:", error));
 			}
 
-			
-			
 			function previewImages() {
 			  imagePreview.innerHTML = ''; // 清空现有预览
 			  const fileInput = document.getElementById('images');
@@ -706,9 +713,7 @@
 			    reader.readAsDataURL(file);
 			  });
 			}
-			
-			
-			
+
 		function loadApplications(page) {
 		    $.get("/cmsub/mysub", function(data) {
 		        allApplications = data; // 存储所有申请数据
@@ -755,7 +760,6 @@
 
 		            tbody.append(row);
 		        });
-
 		        updatePagination(page);
 		    });
 		}
@@ -780,7 +784,6 @@
 		        alert("删除失败，请重试！");
 		    });
 		}
-
 
 		// 查看按钮点击事件，跳转到 subdetail.html 页面
 		function viewApplication(subid) {
@@ -833,36 +836,17 @@
 		    let contentSelect = row.querySelector('.content-select');
 		    let statusSelect = row.querySelector('.status-select');
 		    let carId = row.cells[2].textContent;
+		    let userId = row.cells[1].textContent; // 获取用户ID
 
 		    // 填充编辑表单
 		    document.getElementById('edit-subid').value = subid;
+		    document.getElementById('edit-uid').value = userId; // 设置用户ID
+		    document.getElementById('edit-vehicle').value = carId; // 直接设置车辆ID
 		    document.getElementById('edit-issue').value = contentSelect.value;
 		    document.getElementById('edit-status').value = statusSelect.value;
-		    
-		    // 获取并设置车辆选项
-		    fetch("/cmcar/mycar", {
-		        method: "GET",
-		        headers: {
-		            "Postman-Token": "f8a5d098-6759-447f-93d5-32fbc247daa5",
-		            "cache-control": "no-cache"
-		        }
-		    })
-		    .then(response => response.json())
-		    .then(data => {
-		        const vehicleSelect = document.getElementById("edit-vehicle");
-		        vehicleSelect.innerHTML = "";
-		        data.forEach(vehicle => {
-		            const option = document.createElement("option");
-		            option.value = vehicle.carid;
-		            option.textContent = vehicle.carid;
-		            if (vehicle.carid === carId) {
-		                option.selected = true;
-		            }
-		            vehicleSelect.appendChild(option);
-		        });
-		        // 显示编辑弹窗
-		        editFormModal.style.display = 'flex';
-		    });
+
+		    // 显示编辑弹窗
+		    editFormModal.style.display = 'flex';
 		}
 
 		// 关闭编辑弹窗
@@ -885,7 +869,7 @@
 		    const subid = document.getElementById('edit-subid').value;
 		    const newContent = document.getElementById('edit-issue').value;
 		    const newStatus = document.getElementById('edit-status').value;
-		    const newCarId = document.getElementById('edit-vehicle').value;
+		    const carId = document.getElementById('edit-vehicle').value; // 获取车辆ID
 
 		    // 发送更新请求到后端
 		    fetch('/cmsub/update', {
@@ -899,7 +883,7 @@
 		            subid: subid,
 		            content: newContent,
 		            status: newStatus,
-		            carid: newCarId
+		            carid: carId
 		        })
 		    })
 		    .then(response => response.json())
@@ -946,7 +930,6 @@
 		        window.location.href = "/index.html";
 		    } else {
 		        let usernameValue = usernameCookie ? usernameCookie.split('=')[1] : null;
-
 		        try {
 		            let user = await fetch(`/cmusr/search/${usernameValue}`).then(response => response.json());
 
@@ -964,7 +947,6 @@
 		            setTimeout(() => {
 		                loadApplications(currentPage); // 确保在权限检查后加载应用数据
 		            }, 100);
-
 		        } catch (error) {
 		            console.error('获取用户信息失败:', error);
 		        }
@@ -977,10 +959,6 @@
 		    showGreeting();
 		});
 
-
 </script>
-
-
-
 </body>
 </html>
