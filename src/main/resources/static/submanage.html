@@ -122,7 +122,6 @@
 
 		    /* 确认弹窗的背景 */
 		    .confirmation-modal {
-		      display: none; /* 初始不显示 */
 		      position: fixed;
 		      top: 0;
 		      left: 0;
@@ -131,7 +130,7 @@
 		      background-color: rgba(0, 0, 0, 0.5); /* 更深的背景色 */
 		      justify-content: center;
 		      align-items: center;
-		      display: flex; /* 使用flexbox进行布局 */
+			  display: none; /* 初始不显示 */
 		    }
 
 		    /* 确认弹窗内容 */
@@ -164,6 +163,8 @@
 
 		    /* 按钮样式 */
 		    button {
+			  margin-top: 5px;
+			  margin-right: -6px;
 		      padding: 10px 20px;
 		      border: none;
 		      border-radius: 5px;
@@ -174,24 +175,30 @@
 
 		    /* 确认弹窗按钮 */
 		    .confirmation-modal .modal-content .button-container button,
-		    #vehicleFormModal .modal-content .button-container button {
-		      background: linear-gradient(to right, #4CAF50, #45a049); /* 绿色渐变背景 */
-		      color: white;
+		    #vehicleFormModal .modal-content .button-container button,
+		    #editFormModal .modal-content .button-container button {
+		        background: linear-gradient(to right, #4CAF50, #45a049); /* 绿色渐变背景 */
+		        color: white;
 		    }
 
 		    .confirmation-modal .modal-content .button-container button:hover,
-		    #vehicleFormModal .modal-content .button-container button:hover {
-		      background: linear-gradient(to right, #45a049, #388e3c); /* 深绿色渐变背景 */
+		    #vehicleFormModal .modal-content .button-container button:hover,
+		    #editFormModal .modal-content .button-container button:hover {
+		        background: linear-gradient(to right, #45a049, #388e3c); /* 深绿色渐变背景 */
 		    }
 
 		    .confirmation-modal .modal-content .button-container button#cancelConfirmation,
-		    #vehicleFormModal .modal-content .button-container button#closeFormButton {
-		      background: #f44336; /* 红色背景 */
+		    #vehicleFormModal .modal-content .button-container button#closeFormButton,
+		    #editFormModal .modal-content .button-container button#closeEditFormButton,
+		    #editConfirmationModal .modal-content .button-container button#cancelEditConfirmation {
+		        background: #f44336; /* 红色背景 */
 		    }
 
 		    .confirmation-modal .modal-content .button-container button#cancelConfirmation:hover,
-		    #vehicleFormModal .modal-content .button-container button#closeFormButton:hover {
-		      background: #d32f2f; /* 深红色背景 */
+		    #vehicleFormModal .modal-content .button-container button#closeFormButton:hover,
+		    #editFormModal .modal-content .button-container button#closeEditFormButton:hover,
+		    #editConfirmationModal .modal-content .button-container button#cancelEditConfirmation:hover {
+		        background: #d32f2f; /* 深红色背景 */
 		    }
 		
 		
@@ -449,13 +456,72 @@
 	  <div id="confirmationModal" class="confirmation-modal">
 	    <div class="modal-content">
 	      <h2>确认提交</h2>
-	      <p>确认提交申请吗？</p>
+	      <p >确认提交申请吗？</p>
 	      <div class="button-container">
 	        <button type="button" id="cancelConfirmation">取消</button>
 	        <button type="button" id="confirmAdd">确认</button>
 	      </div>
 	    </div>
 	  </div>
+
+    <!-- 修改申请弹窗 -->
+    <div id="editFormModal" class="modal">
+        <div class="modal-content">
+            <h2>修改申请</h2>
+            <form id="editForm">
+                <!-- 申请ID (隐藏) -->
+                <input type="hidden" id="edit-subid">
+                
+                <!-- 申请车辆 -->
+                <div class="form-group">
+                    <label for="edit-vehicle">申请车辆:</label>
+                    <select id="edit-vehicle" name="edit-vehicle" required>
+                    </select>
+                </div>
+
+                <!-- 申请内容 -->
+                <div class="form-group">
+                    <label for="edit-issue">申请内容:</label>
+                    <select id="edit-issue" name="edit-issue" required>
+                        <option value="车灯损坏">车灯损坏</option>
+                        <option value="后视镜损坏">后视镜损坏</option>
+                        <option value="保险杠损坏">保险杠损坏</option>
+                        <option value="轮胎损坏">轮胎损坏</option>
+                        <option value="座椅损坏">座椅损坏</option>
+                        <option value="车漆刮擦">车漆刮擦</option>
+                    </select>
+                </div>
+
+                <!-- 状态 -->
+                <div class="form-group">
+                    <label for="edit-status">状态:</label>
+                    <select id="edit-status" name="edit-status" required>
+                        <option value="审批中">审批中</option>
+                        <option value="未通过">未通过</option>
+                        <option value="已通过">已通过</option>
+                    </select>
+                </div>
+
+                <!-- 按钮容器 -->
+                <div class="button-container">
+                    <button type="button" id="closeEditFormButton" style="margin-left: 58%; background: #f44336;">取消</button>
+                    <button type="button" id="confirmEditButton" style="background: linear-gradient(to right, #4CAF50, #45a049);">确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 修改确认弹窗 -->
+    <div id="editConfirmationModal" class="confirmation-modal">
+        <div class="modal-content">
+            <h2>确认修改</h2>
+            <p>确认修改申请吗？</p>
+            <div class="button-container">
+                <button type="button" id="cancelEditConfirmation" style="background: #f44336;">取消</button>
+                <button type="button" id="confirmEdit" style="background: linear-gradient(to right, #4CAF50, #45a049);">确认</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 导航栏 -->
     <div class="navbar">
@@ -752,35 +818,106 @@
 		    loadApplications(currentPage);
 		}
 
+		// 获取修改弹窗相关元素
+		const editFormModal = document.getElementById('editFormModal');
+		const editConfirmationModal = document.getElementById('editConfirmationModal');
+		const closeEditFormButton = document.getElementById('closeEditFormButton');
+		const confirmEditButton = document.getElementById('confirmEditButton');
+		const cancelEditConfirmation = document.getElementById('cancelEditConfirmation');
+		const confirmEdit = document.getElementById('confirmEdit');
+
 		// 编辑申请记录
 		function editApplication(subid) {
-		    // 获取当前行的 content 和 status
+		    // 获取当前行数据
 		    let row = event.target.closest('tr');
 		    let contentSelect = row.querySelector('.content-select');
 		    let statusSelect = row.querySelector('.status-select');
+		    let carId = row.cells[2].textContent;
 
-		    let newContent = contentSelect.value; // 获取选择的内容
-		    let newStatus = statusSelect.value; // 获取选择的状态
-
-		    // 发送更新请求到后端
-		    $.ajax({
-		        url: '/cmsub/update', // 更新接口
-		        type: 'POST',
-		        contentType: 'application/json',
-		        data: JSON.stringify({
-		            subid: subid,
-		            content: newContent,  // 发送选择的内容
-		            status: newStatus     // 发送选择的状态
-		        }),
-		        success: function(response) {
-		            alert("申请记录已更新！");
-		            loadApplications(currentPage); // 刷新表格数据
-		        },
-		        error: function() {
-		            alert("更新失败，请重试！");
+		    // 填充编辑表单
+		    document.getElementById('edit-subid').value = subid;
+		    document.getElementById('edit-issue').value = contentSelect.value;
+		    document.getElementById('edit-status').value = statusSelect.value;
+		    
+		    // 获取并设置车辆选项
+		    fetch("/cmcar/mycar", {
+		        method: "GET",
+		        headers: {
+		            "Postman-Token": "f8a5d098-6759-447f-93d5-32fbc247daa5",
+		            "cache-control": "no-cache"
 		        }
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        const vehicleSelect = document.getElementById("edit-vehicle");
+		        vehicleSelect.innerHTML = "";
+		        data.forEach(vehicle => {
+		            const option = document.createElement("option");
+		            option.value = vehicle.carid;
+		            option.textContent = vehicle.carid;
+		            if (vehicle.carid === carId) {
+		                option.selected = true;
+		            }
+		            vehicleSelect.appendChild(option);
+		        });
+		        // 显示编辑弹窗
+		        editFormModal.style.display = 'flex';
 		    });
 		}
+
+		// 关闭编辑弹窗
+		closeEditFormButton.addEventListener('click', function() {
+		    editFormModal.style.display = 'none';
+		});
+
+		// 打开编辑确认弹窗
+		confirmEditButton.addEventListener('click', function() {
+		    editConfirmationModal.style.display = 'flex';
+		});
+
+		// 取消编辑确认
+		cancelEditConfirmation.addEventListener('click', function() {
+		    editConfirmationModal.style.display = 'none';
+		});
+
+		// 确认编辑
+		confirmEdit.addEventListener('click', function() {
+		    const subid = document.getElementById('edit-subid').value;
+		    const newContent = document.getElementById('edit-issue').value;
+		    const newStatus = document.getElementById('edit-status').value;
+		    const newCarId = document.getElementById('edit-vehicle').value;
+
+		    // 发送更新请求到后端
+		    fetch('/cmsub/update', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		            'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
+		            'cache-control': 'no-cache'
+		        },
+		        body: JSON.stringify({
+		            subid: subid,
+		            content: newContent,
+		            status: newStatus,
+		            carid: newCarId
+		        })
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data === 1) {
+		            alert("申请记录已更新！");
+		            editConfirmationModal.style.display = 'none';
+		            editFormModal.style.display = 'none';
+		            loadApplications(currentPage);
+		        } else {
+		            alert("更新失败，请重试！");
+		        }
+		    })
+		    .catch(error => {
+		        console.error('更新失败:', error);
+		        alert("更新失败，请重试！");
+		    });
+		});
 
 		// 退出登录功能
 		function logout() {
@@ -824,7 +961,9 @@
 		            }
 
 		            // 权限检查完成后，调用页面加载函数
-		            loadApplications(currentPage); // 确保在权限检查后加载应用数据
+		            setTimeout(() => {
+		                loadApplications(currentPage); // 确保在权限检查后加载应用数据
+		            }, 100);
 
 		        } catch (error) {
 		            console.error('获取用户信息失败:', error);
@@ -836,7 +975,6 @@
 		$(document).ready(function() {
 		    checkLogin();
 		    showGreeting();
-		    loadApplications(currentPage);
 		});
 
 
