@@ -11,6 +11,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -204,6 +206,13 @@ public class subop {
         }
 
         return 1; // 申请成功 & 图片全部上传成功
+    }
+
+
+    @GetMapping("/selectone")
+    public List<cmsub> selectByCarid(@RequestParam String carid)
+    {
+    	return cmsubMapper.selectByCarid(carid);
     }
 
     

@@ -250,6 +250,7 @@
                     <thead>
                         <tr>
                             <th>车牌号</th>
+                            <th>申请ID</th>
                             <th>关联申请</th>
                             <th>关联申请状态</th>
                             <th>操作</th>
@@ -264,6 +265,7 @@
                     <thead>
                         <tr>
                             <th>车牌号</th>
+                            <th>工单ID</th>
                             <th>关联工单</th>
                             <th>关联工单状态</th>
                             <th>操作</th>
@@ -278,6 +280,7 @@
                     <thead>
                         <tr>
                             <th>车牌号</th>
+                            <th>账单ID</th>
                             <th>关联账单</th>
                             <th>关联账单状态</th>
                             <th>操作</th>
@@ -290,6 +293,9 @@
     </div>
 
     <script>
+        // 添加全局变量存储当前车辆数据
+        let currentCarData = null;
+
         // 检查用户是否已登录
         function checkLogin() {
             let cookies = document.cookie.split('; ');
@@ -330,24 +336,29 @@
                     'cache-control': 'no-cache'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(cars => {
                 // 找到指定的车辆
-                const carData = cars.find(car => car.carid === carId);
+                currentCarData = cars.find(car => car.carid === carId);
                 
-                if (!carData) {
+                if (!currentCarData) {
                     alert('未找到指定车辆信息！');
                     return;
                 }
 
                 // 填充基本信息
-                document.getElementById('carId').textContent = carData.carid;
-                document.getElementById('kind').textContent = carData.kind;
-                document.getElementById('year').textContent = carData.year;
-                document.getElementById('status').textContent = carData.status;
+                document.getElementById('carId').textContent = currentCarData.carid;
+                document.getElementById('kind').textContent = currentCarData.kind;
+                document.getElementById('year').textContent = currentCarData.year;
+                document.getElementById('status').textContent = currentCarData.status;
 
                 // 获取车主信息
-                return fetch(`/cmusr/find/${carData.uid}`, {
+                return fetch(`/cmusr/find/${currentCarData.uid}`, {
                     method: 'GET',
                     headers: {
                         'Postman-Token': 'b034b197-e0ce-4c4f-909f-067c227c539d',
@@ -355,19 +366,25 @@
                     }
                 });
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(userData => {
                 // 填充车主信息
                 document.getElementById('owner').textContent = userData.username;
                 
-                // 填充三个关联信息表格
+                // 填充关联信息表格，使用currentCarData确保数据可用
                 const requestRow = `
                     <tr>
-                        <td>${carData.carid}</td>
-                        <td>${carData.relatedRequest || '暂无'}</td>
-                        <td>${carData.relatedRequestStatus || '暂无'}</td>
+                        <td>${currentCarData.carid}</td>
+                        <td>${currentCarData.requestId || '暂无'}</td>
+                        <td>${currentCarData.relatedRequest || '暂无'}</td>
+                        <td>${currentCarData.relatedRequestStatus || '暂无'}</td>
                         <td>
-                            <button class="btn-view" onclick="viewRequestDetails('${carData.carid}')">查看</button>
+                            <button class="btn-view" onclick="viewRequestDetails('${currentCarData.requestId || ''}')">查看</button>
                         </td>
                     </tr>
                 `;
@@ -375,11 +392,12 @@
 
                 const workRow = `
                     <tr>
-                        <td>${carData.carid}</td>
-                        <td>${carData.relatedWorkOrder || '暂无'}</td>
-                        <td>${carData.relatedWorkOrderStatus || '暂无'}</td>
+                        <td>${currentCarData.carid}</td>
+                        <td>${currentCarData.workOrderId || '暂无'}</td>
+                        <td>${currentCarData.relatedWorkOrder || '暂无'}</td>
+                        <td>${currentCarData.relatedWorkOrderStatus || '暂无'}</td>
                         <td>
-                            <button class="btn-view" onclick="viewWorkOrderDetails('${carData.carid}')">查看</button>
+                            <button class="btn-view" onclick="viewWorkOrderDetails('${currentCarData.workOrderId || ''}')">查看</button>
                         </td>
                     </tr>
                 `;
@@ -387,11 +405,12 @@
 
                 const billRow = `
                     <tr>
-                        <td>${carData.carid}</td>
-                        <td>${carData.relatedBill || '暂无'}</td>
-                        <td>${carData.relatedBillStatus || '暂无'}</td>
+                        <td>${currentCarData.carid}</td>
+                        <td>${currentCarData.billId || '暂无'}</td>
+                        <td>${currentCarData.relatedBill || '暂无'}</td>
+                        <td>${currentCarData.relatedBillStatus || '暂无'}</td>
                         <td>
-                            <button class="btn-view" onclick="viewBillDetails('${carData.carid}')">查看</button>
+                            <button class="btn-view" onclick="viewBillDetails('${currentCarData.billId || ''}')">查看</button>
                         </td>
                     </tr>
                 `;
@@ -399,21 +418,39 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('获取车辆信息失败！');
+                alert('获取数据失败：' + error.message);
             });
         }
 
-        // 查看详情
+        // 查看详情函数更新
         function viewRequestDetails(id) {
+            if (!id || id === '暂无') {
+                alert('暂无关联申请信息');
+                return;
+            }
+            // 实现申请详情查看逻辑
             console.log('查看申请详情:', id);
+            window.location.href = `/subdetail.html?id=${id}`;
         }
 
         function viewWorkOrderDetails(id) {
+            if (!id || id === '暂无') {
+                alert('暂无关联工单信息');
+                return;
+            }
+            // 实现工单详情查看逻辑
             console.log('查看工单详情:', id);
+            window.location.href = `/workorderdetail.html?id=${id}`;
         }
 
         function viewBillDetails(id) {
+            if (!id || id === '暂无') {
+                alert('暂无关联账单信息');
+                return;
+            }
+            // 实现账单详情查看逻辑
             console.log('查看账单详情:', id);
+            window.location.href = `/orderdetail.html?id=${id}`;
         }
 
         // 添加标签页切换功能

@@ -20,4 +20,5 @@ public interface cmworkorderMapper {
     List<cmworkorder> selectAll();
     List<cmworkorder> selectByUid(Integer uid);
     List<cmworkorder> selectByCmUid(Integer cmuid);
+    List<cmworkorder> selectByCarid(String carid);
 }

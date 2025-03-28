@@ -20,4 +20,5 @@ public interface cmorderMapper {
     List<cmorder> selectAll();
     
     List<cmorder> selectByUid(Integer uid);
+    List<cmorder> selectByCarid(String carid);
 }

@@ -18,7 +18,15 @@
     <include refid="Base_Column_List" />
     from cm_sub
     where uid = #{uid}
-  </select>  
+  </select>
+ <select id="selectByCarid" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cm_sub
+    where carid = #{carid,jdbcType=VARCHAR}
+</select>
+
+  
 
   
   <sql id="Base_Column_List">

@@ -278,6 +278,29 @@
 		    window.location.href = "/index.html";
 		}
 
+		function formatDate(dateString) {
+		    if (!dateString) return "";
+		    const date = new Date(dateString);
+		    if (isNaN(date.getTime()) || date.getFullYear() === 1970) return "暂无";
+		    return date.toLocaleString('zh-CN', { 
+		        year: 'numeric',
+		        month: '2-digit',
+		        day: '2-digit',
+		        hour: '2-digit',
+		        minute: '2-digit',
+		        second: '2-digit',
+		        hour12: false
+		    });
+		}
+
+		// 添加日期格式化函数
+		function formatDateForBackend(dateStr) {
+		    if (!dateStr || dateStr === "暂无") return null;
+		    const date = new Date(dateStr);
+		    if (isNaN(date.getTime())) return null;
+		    return date.toISOString().split('.')[0]; // 返回格式: "yyyy-MM-dd'T'HH:mm:ss"
+		}
+
 		function loadApplications(page) {
 		    $.ajax({
 		        url: '/cmorder/myorder',
@@ -292,24 +315,18 @@
 		            tbody.empty();
 		            
 		            for(const application of applicationsToShow) {
-		                const startTime = new Date(application.starttime).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
-		                const finishedTime = new Date(application.finishedtime).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+		                const startTime = formatDate(application.starttime);
+		                const finishedTime = formatDate(application.finishedtime);
 
 		                // 获取用户名
 		                let username = '';
 		                try {
-		                    const response = await fetch(`/cmusr/find/${application.uid}`, {
-		                        method: 'GET',
-		                        headers: {
-		                            'Postman-Token': 'd6f2de0b-26da-4800-a35f-d1c7d257c5a1',
-		                            'cache-control': 'no-cache'
-		                        }
-		                    });
+		                    const response = await fetch(`/cmusr/find/${application.uid}`);
 		                    const userData = await response.json();
 		                    username = userData.username;
 		                } catch(error) {
 		                    console.error('获取用户名失败:', error);
-		                    username = application.uid; // 如果获取失败则显示用户ID
+		                    username = application.uid;
 		                }
 
 		                const row = `<tr>
@@ -325,7 +342,11 @@
 		                            <option ${application.status === "已完成" ? "selected" : ""}>已完成</option>
 		                        </select>
 		                    </td>
-		                    <td><button class="btn-pay" onclick="pay('${application.orderid}', '${application.uid}', '${application.money}', '${startTime}', '${finishedTime}', '${application.status}')">支付</button></td>
+		                    <td>
+		                        <button class="btn-pay" onclick="pay('${application.orderid}', '${application.uid}', '${application.money}', '${application.starttime}', '${application.finishedtime}', '${application.status}')" ${application.status === "已完成" ? "disabled" : ""}>
+		                            ${application.status === "已完成" ? "已支付" : "支付"}
+		                        </button>
+		                    </td>
 		                </tr>`;
 		                tbody.append(row);
 		            }
@@ -340,31 +361,41 @@
 
 		// 支付按钮的点击事件
 		function pay(orderid, uid, money, starttime, finishedtime, status) {
+		    console.log('Sending payment for order:', orderid); // 调试日志
+
 		    const cmorderObject = {
 		        orderid: orderid,
 		        uid: uid,
-		        money: money,
-		        starttime: new Date(starttime).toISOString(),  // 格式化日期
-		        finishedtime: new Date(finishedtime).toISOString(),  // 格式化日期
-		        status: status === "已完成" ? "已完成" : "处理中"
+		        money: parseFloat(money), // 确保金额是数字
+		        starttime: starttime ? formatDateForBackend(starttime) : null,
+		        finishedtime: finishedtime ? formatDateForBackend(finishedtime) : null,
+		        status: "已完成"  // 支付后状态直接设为已完成
 		    };
 
-		    $.ajax({
-		        url: '/cmorder/pay',
-		        type: 'POST',
-		        contentType: 'application/json',
-		        data: JSON.stringify(cmorderObject),  // 传递格式化后的 cmorder 对象
-		        success: function(response) {
-		            alert("支付成功！");
-		            loadApplications(currentPage);
+		    console.log('Payment data:', cmorderObject); // 调试日志
+
+		    fetch('/cmorder/pay', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json'
 		        },
-		        error: function(error) {
-		            console.error("Error processing payment", error);
-		            alert("支付失败，请重试！");
+		        body: JSON.stringify(cmorderObject)
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error(`HTTP error! status: ${response.status}`);
 		        }
+		        return response.json();
+		    })
+		    .then(data => {
+		        alert("支付成功！");
+		        loadApplications(currentPage);
+		    })
+		    .catch(error => {
+		        console.error('Payment error:', error);
+		        alert("支付失败：" + error.message);
 		    });
 		}
-
 
 		// 更新分页控件
 		function updatePagination(page) {

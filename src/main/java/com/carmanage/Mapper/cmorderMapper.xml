@@ -21,7 +21,13 @@
   from cm_order
   where uid = #{uid,jdbcType=INTEGER}
   </select>
-  
+  <select id="selectByCarid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cm_order
+    where carid = #{carid,jdbcType=VARCHAR}
+</select>
+
   
   <sql id="Base_Column_List">
     orderid, carid, uid, money, starttime, finishedtime, status

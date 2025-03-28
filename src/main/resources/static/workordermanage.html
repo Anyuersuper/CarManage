@@ -601,6 +601,23 @@
 		    });
 		}
 
+		// 修改时间格式处理函数
+		function formatDateForBackend(dateStr) {
+		    if (!dateStr) return null;
+		    const date = new Date(dateStr);
+		    if (isNaN(date.getTime())) return null;
+		    
+		    // 返回格式: "yyyy-MM-dd'T'HH:mm:ss"
+		    const year = date.getFullYear();
+		    const month = String(date.getMonth() + 1).padStart(2, '0');
+		    const day = String(date.getDate()).padStart(2, '0');
+		    const hours = String(date.getHours()).padStart(2, '0');
+		    const minutes = String(date.getMinutes()).padStart(2, '0');
+		    const seconds = String(date.getSeconds()).padStart(2, '0');
+		    
+		    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+		}
+
 		// 渲染工单表格
 		async function renderTable(data) {
 		    let tbody = $("#workorder-table tbody");
@@ -611,8 +628,9 @@
 		    const pageData = data.slice(start, end);
 
 		    for(const application of pageData) {
-		        const startTime = application.starttime ? formatToChinaTime(application.starttime) : "";
-		        const finishedTime = application.finishedtime ? formatToChinaTime(application.finishedtime) : "";
+		        // 格式化开始时间和结束时间
+		        const startTime = application.starttime ? formatDateForBackend(application.starttime) : "";
+		        const finishedTime = application.finishedtime ? formatDateForBackend(application.finishedtime) : "";
 
 		        // 获取用户名
 		        let username = '';
@@ -661,28 +679,21 @@
 
 		// 修改按钮点击事件
 		function editApplication(workorderid) {
-		    const row = $(`#workorder-table tr[data-workorderid="${workorderid}"]`);
-		    if (row.length === 0) {
-		        alert("未找到对应的工单行");
+		    // 获取当前工单数据
+		    const currentWorkOrder = allApplications.find(app => app.workorderid === workorderid);
+		    if (!currentWorkOrder) {
+		        alert("未找到对应的工单数据");
 		        return;
 		    }
 
-		    // 获取行数据
-		    const uid = row.find("td").eq(1).text().trim();
-		    const cmuid = row.find("td").eq(2).text().trim(); // 获取维修员工ID
-		    const carid = row.find("td").eq(3).text().trim(); // 获取车牌号
-		    const starttime = row.find("td").eq(4).text().trim();
-		    const finishedtime = row.find("td").eq(5).text().trim();
-		    const status = row.find("select").val();
-
 		    // 填充编辑表单
-		    document.getElementById('edit-workorderid').value = workorderid;
-		    document.getElementById('edit-uid').value = uid;
-		    document.getElementById('edit-cmuid').value = cmuid; // 使用input而不是select
-		    document.getElementById('edit-carid').value = carid; // 设置车牌号
-		    document.getElementById('edit-starttime').value = starttime;
-		    document.getElementById('edit-finishedtime').value = finishedtime;
-		    document.getElementById('edit-status').value = status;
+		    document.getElementById('edit-workorderid').value = currentWorkOrder.workorderid;
+		    document.getElementById('edit-uid').value = currentWorkOrder.uid;
+		    document.getElementById('edit-cmuid').value = currentWorkOrder.cmuid;
+		    document.getElementById('edit-carid').value = currentWorkOrder.carid;
+		    document.getElementById('edit-starttime').value = formatToChinaTime(currentWorkOrder.starttime);
+		    document.getElementById('edit-finishedtime').value = formatToChinaTime(currentWorkOrder.finishedtime);
+		    document.getElementById('edit-status').value = currentWorkOrder.status;
 
 		    // 初始化金额输入框的显示状态
 		    toggleMoneyInput();
@@ -857,6 +868,7 @@
 		    });
 
 		    newConfirmEdit.addEventListener('click', function() {
+		        const workorderid = document.getElementById('edit-workorderid').value;
 		        const status = document.getElementById('edit-status').value;
 		        let money = 0;
 		        
@@ -868,50 +880,49 @@
 		            }
 		        }
 
-		        // 转换日期格式为 "yyyy-MM-dd'T'HH:mm:ss"
-		        function formatDateForBackend(dateString) {
-		            if (!dateString) return null;
-		            const date = new Date(dateString);
-		            return date.toISOString().slice(0, 19); // 获取格式化的日期时间字符串
-		        }
-
-		        const workorderid = document.getElementById('edit-workorderid').value;
-		        const uid = document.getElementById('edit-uid').value;
-		        const cmuid = document.getElementById('edit-cmuid').value; // 直接获取input的值
-		        const carid = document.getElementById('edit-carid').value; // 获取车牌号
+		        // 转换日期格式
 		        const starttime = formatDateForBackend(document.getElementById('edit-starttime').value);
 		        const finishedtime = formatDateForBackend(document.getElementById('edit-finishedtime').value);
 
 		        const updatedWorkOrder = {
-		            workorderid,
-		            uid,
-		            cmuid, // 使用直接获取的cmuid
-		            carid, // 添加车牌号
-		            starttime,   // 使用转换后的日期格式
-		            finishedtime, // 使用转换后的日期格式
-		            status
+		            workorderid: workorderid,
+		            uid: document.getElementById('edit-uid').value,
+		            cmuid: document.getElementById('edit-cmuid').value,
+		            carid: document.getElementById('edit-carid').value,
+		            starttime: starttime,
+		            finishedtime: finishedtime,
+		            status: status
 		        };
 
-		        $.ajax({
-		            url: `/cmworkorder/update/${money}`,
-		            method: 'POST',
-		            contentType: 'application/json',
-		            data: JSON.stringify(updatedWorkOrder),
-		            success: function(response) {
-		                if (response === 1) {
-		                    alert("工单更新成功！");
-		                    loadApplications(currentPage);
-		                } else {
-		                    alert("工单更新失败！");
-		                }
-		            },
-		            error: function(xhr) {
-		                alert("请求失败：" + xhr.status + " " + xhr.statusText);
-		            }
-		        });
+		        console.log('Sending data:', updatedWorkOrder); // 调试用
 
-		        editConfirmationModal.style.display = 'none';
-		        editFormModal.style.display = 'none';
+		        fetch(`/cmworkorder/update/${money}`, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json'
+		            },
+		            body: JSON.stringify(updatedWorkOrder)
+		        })
+		        .then(response => {
+		            if (!response.ok) {
+		                throw new Error(`HTTP error! status: ${response.status}`);
+		            }
+		            return response.json();
+		        })
+		        .then(data => {
+		            if (data === 1) {
+		                alert("工单更新成功！");
+		                document.getElementById('editConfirmationModal').style.display = 'none';
+		                document.getElementById('editFormModal').style.display = 'none';
+		                loadApplications(currentPage); // 重新加载数据
+		            } else {
+		                alert("工单更新失败！");
+		            }
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		            alert("更新请求失败：" + error.message);
+		        });
 		    });
 
 		    // 添加查看弹窗的关闭按钮事件
