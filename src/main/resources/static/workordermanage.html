@@ -166,11 +166,28 @@
             cursor: not-allowed;
         }
 
-        /* 按钮容器样式 */
-        .button-container {
+        /* 表格操作列按钮容器样式 */
+        td .button-container {
+            margin: 0;  /* 移除外边距 */
+            padding: 0; /* 移除内边距 */
             display: flex;
-            gap: 10px; /* 按钮之间的间距 */
-            justify-content: flex-start; /* 按钮左对齐 */
+            gap: 5px;  /* 按钮之间的间距 */
+            align-items: center;
+            justify-content: center;
+            height: 100%; /* 使容器填满单元格高度 */
+        }
+
+        /* 操作列按钮样式 */
+        td .button-container .btn {
+            padding: 4px 8px;
+            margin: 0;  /* 移除外边距 */
+            font-size: 15px;  /* 调整字体大小到15px */
+            height: 30px;
+            line-height: 16px;
+            min-width: 45px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* 修改按钮 */
@@ -204,9 +221,287 @@
         .btn-view:hover {
             background-color: #0056b3;
         }
+
+        /* 弹窗基础样式 */
+        .modal,
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 弹窗内容样式 */
+        .modal .modal-content,
+        .confirmation-modal .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 360px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin: 0;
+        }
+
+        /* 确认弹窗按钮容器样式 */
+        .confirmation-modal .modal-content .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* 修改确认弹窗的样式 */
+        #deleteConfirmationModal .modal-content {
+            width: 300px; /* 设置和submanage.html的确认弹窗一样的宽度 */
+            text-align: center;
+        }
+
+        #deleteConfirmationModal .modal-content .button-container {
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* 弹窗内容样式覆盖 */
+        #editConfirmationModal .modal-content {
+            width: 300px; /* 设置和删除确认弹窗一样的宽度 */
+            text-align: center;
+        }
+
+        #editConfirmationModal .modal-content .button-container {
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* 统一按钮样式 */
+        .confirmation-modal .modal-content .button-container button,
+        .modal .modal-content .button-container button {
+            padding: 8px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        /* 取消和确认按钮样式 */
+        #cancelEditConfirmation,
+        #closeEditFormButton,
+        #closeViewFormButton,
+        #cancelDelete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        #confirmEdit,
+        #confirmEditButton,
+        #confirmDelete {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+        }
+
+        /* 添加表单样式 */
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            width: 30%;
+            font-size: 14px;
+            text-align: left;
+            margin-right: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 65%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* 修改弹窗内容标题样式 */
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* 修改确认弹窗内容样式 */
+        .modal-content p {
+            margin: 20px 0;
+            font-size: 16px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
+
+    <!-- 修改工单弹窗 -->
+    <div id="editFormModal" class="modal">
+        <div class="modal-content">
+            <h2>修改工单</h2>
+            <form id="editForm">
+                <!-- 工单ID -->
+                <div class="form-group">
+                    <label for="edit-workorderid">工单ID:</label>
+                    <input type="text" id="edit-workorderid" name="edit-workorderid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 用户ID -->
+                <div class="form-group">
+                    <label for="edit-uid">用户ID:</label>
+                    <input type="text" id="edit-uid" name="edit-uid" readonly style="background-color: #f5f5f5;">
+                </div>
+                
+                <!-- 维修员工ID -->
+                <div class="form-group">
+                    <label for="edit-cmuid">维修员工ID:</label>
+                    <input type="text" id="edit-cmuid" name="edit-cmuid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 车牌号 -->
+                <div class="form-group">
+                    <label for="edit-carid">车牌号:</label>
+                    <input type="text" id="edit-carid" name="edit-carid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 开始时间 -->
+                <div class="form-group">
+                    <label for="edit-starttime">开始时间:</label>
+                    <input type="text" id="edit-starttime" name="edit-starttime" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 完成时间 -->
+                <div class="form-group">
+                    <label for="edit-finishedtime">完成时间:</label>
+                    <input type="text" id="edit-finishedtime" name="edit-finishedtime" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 状态 -->
+                <div class="form-group">
+                    <label for="edit-status">状态:</label>
+                    <select id="edit-status" name="edit-status" style="width: 70%;" required onchange="toggleMoneyInput()">
+                        <option value="处理中">处理中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </div>
+
+                <!-- 金额输入框 -->
+                <div class="form-group" id="moneyInputGroup" style="display: none;">
+                    <label for="edit-money">金额:</label>
+                    <input type="number" id="edit-money" name="edit-money" min="0" step="0.01"  required>
+                </div>
+
+                <!-- 按钮容器 -->
+                <div class="button-container" style="margin-top: 5px;">
+                    <button type="button" id="closeEditFormButton" style="margin-left: 53%;">取消</button>
+                    <button type="button" id="confirmEditButton">确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 修改确认弹窗 -->
+    <div id="editConfirmationModal" class="confirmation-modal">
+        <div class="modal-content">
+            <h2>确认修改</h2>
+            <p>确认修改工单吗？</p>
+            <div class="button-container">
+                <button type="button" id="cancelEditConfirmation">取消</button>
+                <button type="button" id="confirmEdit">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查看工单弹窗 -->
+    <div id="viewFormModal" class="modal">
+        <div class="modal-content">
+            <h2>查看工单</h2>
+            <form id="viewForm">
+                <!-- 工单ID -->
+                <div class="form-group">
+                    <label for="view-workorderid">工单ID:</label>
+                    <input type="text" id="view-workorderid" name="view-workorderid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 用户ID -->
+                <div class="form-group">
+                    <label for="view-uid">用户ID:</label>
+                    <input type="text" id="view-uid" name="view-uid" readonly style="background-color: #f5f5f5;">
+                </div>
+                
+                <!-- 维修员工ID -->
+                <div class="form-group">
+                    <label for="view-cmuid">维修员工ID:</label>
+                    <input type="text" id="view-cmuid" name="view-cmuid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 车牌号 -->
+                <div class="form-group">
+                    <label for="view-carid">车牌号:</label>
+                    <input type="text" id="view-carid" name="view-carid" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 开始时间 -->
+                <div class="form-group">
+                    <label for="view-starttime">开始时间:</label>
+                    <input type="text" id="view-starttime" name="view-starttime" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 完成时间 -->
+                <div class="form-group">
+                    <label for="view-finishedtime">完成时间:</label>
+                    <input type="text" id="view-finishedtime" name="view-finishedtime" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 状态 -->
+                <div class="form-group">
+                    <label for="view-status">状态:</label>
+                    <input type="text" id="view-status" name="view-status" readonly style="background-color: #f5f5f5;">
+                </div>
+
+                <!-- 按钮容器 -->
+                <div class="button-container" style="margin-top: 5px;">
+                    <button type="button" id="closeViewFormButton" style="margin-left: 78%;">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div id="deleteConfirmationModal" class="confirmation-modal">
+        <div class="modal-content">
+            <h2>确认删除</h2>
+            <p>确认删除这个工单吗？</p>
+            <div class="button-container">
+                <button type="button" id="cancelDelete">取消</button>
+                <button type="button" id="confirmDelete">确认</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 导航栏 -->
     <div class="navbar">
@@ -242,6 +537,7 @@
                     <th>工单ID</th>
                     <th>用户ID</th>
                     <th>维修员工ID</th>
+                    <th>车牌号</th>
                     <th>开始时间</th>
                     <th>完成时间</th>
                     <th>状态</th>
@@ -287,7 +583,19 @@
 
 		// 格式化时间为中国时间（CST）
 		function formatToChinaTime(date) {
-		    return new Date(date).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
+		    if (!date) return "";
+		    const d = new Date(date);
+		    if (isNaN(d.getTime())) return "";
+		    return d.toLocaleString("zh-CN", { 
+		        timeZone: "Asia/Shanghai",
+		        year: 'numeric',
+		        month: '2-digit',
+		        day: '2-digit',
+		        hour: '2-digit',
+		        minute: '2-digit',
+		        second: '2-digit',
+		        hour12: false
+		    });
 		}
 
 		// 渲染工单表格
@@ -316,11 +624,13 @@
 				    <td>${application.workorderid}</td>
 				    <td>${application.uid}</td>
 				    <td>${application.cmuid}</td>
+                    <td>${application.carid}</td>
 				    <td>${startTime}</td>
 				    <td>${finishedTime}</td>
 				    <td>${statusOptions}</td>
 				    <td>
 				        <div class="button-container">
+				            <button class="btn btn-view" onclick="viewApplication('${application.workorderid}')">查看</button>
 				            ${window.canEdit ? `<button class="btn btn-edit" onclick="editApplication('${application.workorderid}')">修改</button>` : ''}
 				            <button class="btn btn-view" onclick="deleteApplication('${application.workorderid}')">删除</button>
 				        </div>
@@ -336,83 +646,71 @@
 		// 修改按钮点击事件
 		function editApplication(workorderid) {
 		    const row = $(`#workorder-table tr[data-workorderid="${workorderid}"]`);
-
 		    if (row.length === 0) {
 		        alert("未找到对应的工单行");
 		        return;
 		    }
 
+		    // 获取行数据
 		    const uid = row.find("td").eq(1).text().trim();
-		    const cmuid = row.find("td").eq(2).text().trim();
-		    let starttime = row.find("td").eq(3).text().trim();
-		    let finishedtime = row.find("td").eq(4).text().trim();
+		    const cmuid = row.find("td").eq(2).text().trim(); // 获取维修员工ID
+		    const carid = row.find("td").eq(3).text().trim(); // 获取车牌号
+		    const starttime = row.find("td").eq(4).text().trim();
+		    const finishedtime = row.find("td").eq(5).text().trim();
 		    const status = row.find("select").val();
 
-		    // 判断如果修改已完成，则需要输入金额
-			let money = 0;
-			if (status == "已完成") {
-			    money = prompt("请输入金额：");
-			    if (money === null || isNaN(money) || money <= 0) {
-			        alert("请输入有效的金额！");
-			        return;
-			    }
-			}
+		    // 填充编辑表单
+		    document.getElementById('edit-workorderid').value = workorderid;
+		    document.getElementById('edit-uid').value = uid;
+		    document.getElementById('edit-cmuid').value = cmuid; // 使用input而不是select
+		    document.getElementById('edit-carid').value = carid; // 设置车牌号
+		    document.getElementById('edit-starttime').value = starttime;
+		    document.getElementById('edit-finishedtime').value = finishedtime;
+		    document.getElementById('edit-status').value = status;
 
+		    // 初始化金额输入框的显示状态
+		    toggleMoneyInput();
 
-		    // 确保时间格式正确
-		    starttime = starttime ? new Date(starttime).toISOString().slice(0, 19) : null;
-		    finishedtime = finishedtime ? new Date(finishedtime).toISOString().slice(0, 19) : null;
+		    // 显示编辑弹窗
+		    document.getElementById('editFormModal').style.display = 'flex';
+		}
 
-		    const updatedWorkOrder = {
-		        workorderid,
-		        uid,
-		        cmuid,
-		        starttime,
-		        finishedtime,
-		        status
-		    };
+		// 查看按钮点击事件
+		function viewApplication(workorderid) {
+		    const row = $(`#workorder-table tr[data-workorderid="${workorderid}"]`);
+		    if (row.length === 0) {
+		        alert("未找到对应的工单行");
+		        return;
+		    }
 
-		    // 发起 AJAX 请求更新工单，并传递金额
-		    $.ajax({
-		        url: `/cmworkorder/update/${money}`,
-		        method: 'POST',
-		        contentType: 'application/json',
-		        data: JSON.stringify(updatedWorkOrder),
-		        success: function(response) {
-		            if (response === 1) {
-		                alert("工单更新成功！");
-		                loadApplications(currentPage);
-		            } else {
-		                alert("工单更新失败！");
-		            }
-		        },
-		        error: function(xhr) {
-		            alert("请求失败：" + xhr.status + " " + xhr.statusText);
-		        }
-		    });
+		    // 获取行数据
+		    const uid = row.find("td").eq(1).text().trim();
+		    const cmuid = row.find("td").eq(2).text().trim();
+		    const carid = row.find("td").eq(3).text().trim();
+		    const starttime = row.find("td").eq(4).text().trim();
+		    const finishedtime = row.find("td").eq(5).text().trim();
+		    const status = row.find("select").val();
+
+		    // 填充查看表单
+		    document.getElementById('view-workorderid').value = workorderid;
+		    document.getElementById('view-uid').value = uid;
+		    document.getElementById('view-cmuid').value = cmuid;
+		    document.getElementById('view-carid').value = carid;
+		    document.getElementById('view-starttime').value = starttime;
+		    document.getElementById('view-finishedtime').value = finishedtime;
+		    document.getElementById('view-status').value = status;
+
+		    // 显示查看弹窗
+		    document.getElementById('viewFormModal').style.display = 'flex';
 		}
 
 		// 删除工单
 		function deleteApplication(workorderid) {
-		    if (confirm("确定要删除这个工单吗？")) {
-		        $.ajax({
-		            url: `/cmworkorder/delete/${workorderid}`,  // 调用删除接口
-		            method: "GET",
-		            success: function (response) {
-		                if (response === 1) {
-		                    alert("工单删除成功！");
-		                    loadApplications(currentPage);  // 重新加载工单列表
-		                } else {
-		                    alert("工单删除失败！");
-		                }
-		            },
-		            error: function () {
-		                alert("请求失败！");
-		            }
-		        });
-		    }
+		    // 保存当前要删除的工单ID
+		    window.currentDeleteId = workorderid;
+		    // 显示确认弹窗
+		    document.getElementById('deleteConfirmationModal').style.display = 'flex';
 		}
-
 
 		// 搜索工单
 		function searchApplications() {
@@ -454,6 +752,12 @@
 		    window.location.replace("/index.html");  // 替换当前页面，防止后退返回
 		}
 
+		// 添加状态切换时显示/隐藏金额输入框的函数
+		function toggleMoneyInput() {
+		    const status = document.getElementById('edit-status').value;
+		    const moneyInputGroup = document.getElementById('moneyInputGroup');
+		    moneyInputGroup.style.display = status === "已完成" ? "flex" : "none";
+		}
 
 		// 页面初始化
 		$(document).ready(function () {
@@ -501,9 +805,136 @@
 		    }
 		}
 
+		// 添加新的事件监听器：
+		document.addEventListener('DOMContentLoaded', function() {
+		    // 清理旧的事件监听器
+		    const editFormModal = document.getElementById('editFormModal');
+		    const editConfirmationModal = document.getElementById('editConfirmationModal');
+		    const closeEditFormButton = document.getElementById('closeEditFormButton');
+		    const confirmEditButton = document.getElementById('confirmEditButton');
+		    const cancelEditConfirmation = document.getElementById('cancelEditConfirmation');
+		    const confirmEdit = document.getElementById('confirmEdit');
 
+		    // 移除所有旧的事件监听器
+		    closeEditFormButton.replaceWith(closeEditFormButton.cloneNode(true));
+		    confirmEditButton.replaceWith(confirmEditButton.cloneNode(true));
+		    cancelEditConfirmation.replaceWith(cancelEditConfirmation.cloneNode(true));
+		    confirmEdit.replaceWith(confirmEdit.cloneNode(true));
 
+		    // 重新获取元素
+		    const newCloseEditFormButton = document.getElementById('closeEditFormButton');
+		    const newConfirmEditButton = document.getElementById('confirmEditButton');
+		    const newCancelEditConfirmation = document.getElementById('cancelEditConfirmation');
+		    const newConfirmEdit = document.getElementById('confirmEdit');
+
+		    // 添加新的事件监听器
+		    newCloseEditFormButton.addEventListener('click', function() {
+		        editFormModal.style.display = 'none';
+		    });
+
+		    newConfirmEditButton.addEventListener('click', function() {
+		        editConfirmationModal.style.display = 'flex';
+		    });
+
+		    newCancelEditConfirmation.addEventListener('click', function() {
+		        editConfirmationModal.style.display = 'none';
+		    });
+
+		    newConfirmEdit.addEventListener('click', function() {
+		        const status = document.getElementById('edit-status').value;
+		        let money = 0;
+		        
+		        if (status === "已完成") {
+		            money = document.getElementById('edit-money').value;
+		            if (!money || isNaN(money) || money <= 0) {
+		                alert("请输入有效的金额！");
+		                return;
+		            }
+		        }
+
+		        // 转换日期格式为 "yyyy-MM-dd'T'HH:mm:ss"
+		        function formatDateForBackend(dateString) {
+		            if (!dateString) return null;
+		            const date = new Date(dateString);
+		            return date.toISOString().slice(0, 19); // 获取格式化的日期时间字符串
+		        }
+
+		        const workorderid = document.getElementById('edit-workorderid').value;
+		        const uid = document.getElementById('edit-uid').value;
+		        const cmuid = document.getElementById('edit-cmuid').value; // 直接获取input的值
+		        const carid = document.getElementById('edit-carid').value; // 获取车牌号
+		        const starttime = formatDateForBackend(document.getElementById('edit-starttime').value);
+		        const finishedtime = formatDateForBackend(document.getElementById('edit-finishedtime').value);
+
+		        const updatedWorkOrder = {
+		            workorderid,
+		            uid,
+		            cmuid, // 使用直接获取的cmuid
+		            carid, // 添加车牌号
+		            starttime,   // 使用转换后的日期格式
+		            finishedtime, // 使用转换后的日期格式
+		            status
+		        };
+
+		        $.ajax({
+		            url: `/cmworkorder/update/${money}`,
+		            method: 'POST',
+		            contentType: 'application/json',
+		            data: JSON.stringify(updatedWorkOrder),
+		            success: function(response) {
+		                if (response === 1) {
+		                    alert("工单更新成功！");
+		                    loadApplications(currentPage);
+		                } else {
+		                    alert("工单更新失败！");
+		                }
+		            },
+		            error: function(xhr) {
+		                alert("请求失败：" + xhr.status + " " + xhr.statusText);
+		            }
+		        });
+
+		        editConfirmationModal.style.display = 'none';
+		        editFormModal.style.display = 'none';
+		    });
+
+		    // 添加查看弹窗的关闭按钮事件
+		    document.getElementById('closeViewFormButton').addEventListener('click', function() {
+		        document.getElementById('viewFormModal').style.display = 'none';
+		    });
+
+		    // 获取删除确认弹窗相关元素
+		    const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+		    const cancelDeleteButton = document.getElementById('cancelDelete');
+		    const confirmDeleteButton = document.getElementById('confirmDelete');
+
+		    // 取消删除
+		    cancelDeleteButton.addEventListener('click', function() {
+		        deleteConfirmationModal.style.display = 'none';
+		    });
+
+		    // 确认删除
+		    confirmDeleteButton.addEventListener('click', function() {
+		        const workorderid = window.currentDeleteId;
+		        $.ajax({
+		            url: `/cmworkorder/delete/${workorderid}`,
+		            method: "GET",
+		            success: function (response) {
+		                if (response === 1) {
+		                    alert("工单删除成功！");
+		                    loadApplications(currentPage);
+		                } else {
+		                    alert("工单删除失败！");
+		                }
+		            },
+		            error: function () {
+		                alert("请求失败！");
+		            }
+		        });
+		        deleteConfirmationModal.style.display = 'none';
+		    });
+		});
 	</script>
 
 </body>
-</html> 
+</html>
