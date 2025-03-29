@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 29/03/2025 04:38:26
+ Date: 29/03/2025 14:36:37
 */
 
 SET NAMES utf8mb4;
@@ -62,7 +62,7 @@ CREATE TABLE `cm_order`  (
 -- ----------------------------
 -- Records of cm_order
 -- ----------------------------
-INSERT INTO `cm_order` VALUES ('OD1743191715268', NULL, 1, 355, '2025-03-29 19:48:16', '2025-03-29 03:55:21.289000', '已完成');
+INSERT INTO `cm_order` VALUES ('OD1743229755643', '川A6666', 1, 999, '2025-03-29 12:08:40', NULL, '处理中');
 
 -- ----------------------------
 -- Table structure for cm_pic
@@ -159,6 +159,6 @@ CREATE TABLE `cm_workorder`  (
 -- Records of cm_workorder
 -- ----------------------------
 INSERT INTO `cm_workorder` VALUES ('GD1743191295959', 1, 3, '京A9999', '2025-03-29 19:48:16', '2025-03-29 03:55:15', '已完成');
-INSERT INTO `cm_workorder` VALUES ('GD1743192520182', 1, 3, '川A6666', '2025-03-29 04:08:40', NULL, '处理中');
+INSERT INTO `cm_workorder` VALUES ('GD1743192520182', 1, 3, '川A6666', '2025-03-29 12:08:40', '2025-03-29 14:29:16', '已完成');
 
 SET FOREIGN_KEY_CHECKS = 1;
