@@ -11,7 +11,7 @@
 ![注册用户](https://github.com/user-attachments/assets/34bf3216-c717-4f3c-b1ff-029d118ee39c)
 
 ### 用户管理
-![用户管理](https://github.com/user-attachments/assets/2263fd65-970d-49db-89f0-8d98c2f9b6ea)
+![用户管理](https://github.com/user-attachments/assets/d9d62fab-8fe4-4feb-b53a-70f3839d0e3c)
 
 ### 新增用户
 ![新增用户](https://github.com/user-attachments/assets/e3d6775a-5999-45e5-a11c-5f1cb5dc1d40)
