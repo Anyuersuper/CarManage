@@ -19,10 +19,8 @@
 ### 车辆管理
 ![车辆管理](https://github.com/user-attachments/assets/45629bc5-ee5f-4918-94fe-0383b0c8f311)
 
-
 ### 添加车辆
-![image](https://github.com/user-attachments/assets/3b4e6d7e-b441-4ef0-aec0-0ac2c675cee8)
-
+![添加车辆](https://github.com/user-attachments/assets/3b4e6d7e-b441-4ef0-aec0-0ac2c675cee8)
 
 ### 查看车辆信息
 ![查看车辆信息](https://github.com/user-attachments/assets/2b52ac5e-28df-4857-a043-a7c19a4efefe)
