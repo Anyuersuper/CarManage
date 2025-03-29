@@ -133,7 +133,7 @@ public class subop {
     
     //修改一个记录
     @PostMapping("/update")
-    public int updateByPrimaryKey(@RequestBody  cmsub row) 
+    public int updateByPrimaryKey(@RequestBody  cmsub row,@RequestParam int cmuid) 
     {
     	cmsub demo = cmsubMapper.selectByPrimaryKey(row.getSubid());
     	if (demo.getStatus().equals("已通过")) {
@@ -146,7 +146,7 @@ public class subop {
     			cmworkorderrow.setWorkorderid( "GD"  +  timestamp );
     			cmworkorderrow.setUid(demo.getUid());
                 cmworkorderrow.setCarid(demo.getCarid());
-    			cmworkorderrow.setCmuid(3);
+    			cmworkorderrow.setCmuid(cmuid);
     			long currentTimeMillis = System.currentTimeMillis();
     	        Date currentDate = new Date(currentTimeMillis);
     			cmworkorderrow.setStarttime(currentDate);
