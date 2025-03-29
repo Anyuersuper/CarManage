@@ -1203,21 +1203,18 @@
             const newStatus = document.getElementById('edit-status').value;
             const carId = document.getElementById('edit-vehicle').value;
             const fixId = document.getElementById('edit-fixid').value;
-
-            // 发送更新请求到后端
-            fetch('/cmsub/update', {
+            fetch(`/cmsub/update?cmuid=${encodeURIComponent(fixId)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Postman-Token': '6c892fb9-b015-49e3-b43a-3d658345b23c',
-                    'cache-control': 'no-cache'
+                    'cache-control': 'no-cache',
                 },
                 body: JSON.stringify({
                     subid: subid,
                     content: newContent,
                     status: newStatus,
                     carid: carId,
-                    fixid: fixId  // 添加维修人员ID
                 })
             })
             .then(response => response.json())
