@@ -87,8 +87,14 @@ public class userop {
 		}
     	
     	List<cmusr> all = cmusrMapper.selectAll();
-
-        row.setAuthority(row.getAuthority());
+	if(row.getAuthority() == null)
+	{
+		row.setAuthority(row.getAuthority(1));
+	}
+        else
+	{
+		row.setAuthority(row.getAuthority());
+	}
 
     	
     	int maxUid = all.stream().mapToInt(cmusr::getUid).max().orElse(0);
