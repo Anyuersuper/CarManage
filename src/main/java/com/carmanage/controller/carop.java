@@ -48,6 +48,9 @@ public class carop {
     @PostMapping("/add")
     public int insert(@RequestBody  cmcar row,@CookieValue(value = "username", required = false) String username) 
     {
+        if (row.getCarid().equals("")) {
+            return 0;
+        }
     	cmusr user = cmusrMapper.selectByPrimaryKey(username);
     	row.setUid(user.getUid());
     	row.setStatus("正常");

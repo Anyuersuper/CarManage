@@ -668,7 +668,14 @@
 				.then(response => response.json()) // 处理返回的 JSON 数据
 				.then(data => {
 				  console.log('成功:', data); // 打印返回的数据
-				  window.location.href = "/carmanage.html"; // 跳转到登录页面
+				  if(data == 1)
+				  {
+					window.location.href = "/carmanage.html"; // 跳转到登录页面
+				  }
+				  else{
+					alert("添加车辆失败");
+				  }
+				  
 				})
 				.catch(error => {
 				  console.error('错误:', error); // 错误处理

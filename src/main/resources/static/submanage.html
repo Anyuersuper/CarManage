@@ -1163,7 +1163,7 @@
 
                 // 添加一个默认选项
                 const defaultOption = document.createElement('option');
-                defaultOption.value = '';
+                defaultOption.value = '-1';
                 defaultOption.textContent = '请选择维修人员';
                 fixidSelect.appendChild(defaultOption);
 
@@ -1203,6 +1203,10 @@
             const newStatus = document.getElementById('edit-status').value;
             const carId = document.getElementById('edit-vehicle').value;
             const fixId = document.getElementById('edit-fixid').value;
+            if(fixId === '-1' && newStatus === '已通过'){
+                alert("请选择维修人员！");
+                return;
+            }
             fetch(`/cmsub/update?cmuid=${encodeURIComponent(fixId)}`, {
                 method: 'POST',
                 headers: {
