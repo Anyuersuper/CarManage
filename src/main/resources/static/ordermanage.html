@@ -343,7 +343,7 @@
 		                        </select>
 		                    </td>
 		                    <td>
-		                        <button class="btn-pay" onclick="pay('${application.orderid}', '${application.uid}', '${application.money}', '${application.starttime}', '${application.finishedtime}', '${application.status}')" ${application.status === "已完成" ? "disabled" : ""}>
+		                        <button class="btn-pay" onclick="pay('${application.orderid}', '${application.uid}', '${application.carid}','${application.money}', '${application.starttime}', '${application.finishedtime}', '${application.status}')" ${application.status === "已完成" ? "disabled" : ""}>
 		                            ${application.status === "已完成" ? "已支付" : "支付"}
 		                        </button>
 		                    </td>
@@ -360,12 +360,13 @@
 		}
 
 		// 支付按钮的点击事件
-		function pay(orderid, uid, money, starttime, finishedtime, status) {
+		function pay(orderid, uid,carid, money, starttime, finishedtime, status) {
 		    console.log('Sending payment for order:', orderid); // 调试日志
 
 		    const cmorderObject = {
 		        orderid: orderid,
 		        uid: uid,
+			carid:carid,
 		        money: parseFloat(money), // 确保金额是数字
 		        starttime: starttime ? formatDateForBackend(starttime) : null,
 		        finishedtime: finishedtime ? formatDateForBackend(finishedtime) : null,
