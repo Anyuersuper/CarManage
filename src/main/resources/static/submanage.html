@@ -1019,17 +1019,17 @@
         function viewApplication(subid) {
             // 获取当前行数据
             let row = event.target.closest('tr');
-            let contentSelect = row.querySelector('.content-select');
-            let statusSelect = row.querySelector('.status-select');
+            // let contentSelect = row.querySelector('.content-select');
+            // let statusSelect = row.querySelector('.status-select');
             let carId = row.cells[2].textContent;
             let userId = row.cells[1].textContent;
-
+            console.log(row.cells[3].textContent);
             // 填充查看表单
             document.getElementById('view-subid').value = subid;
             document.getElementById('view-uid').value = userId;
             document.getElementById('view-vehicle').value = carId;
-            document.getElementById('view-issue').value = contentSelect.value;
-            document.getElementById('view-status').value = statusSelect.value;
+            document.getElementById('view-issue').value = row.cells[3].textContent;
+            document.getElementById('view-status').value = row.cells[4].textContent;
 
             // 获取并显示图片
             fetch(`/cmpic/find/${subid}`, {
@@ -1080,7 +1080,7 @@
             // 显示查看弹窗
             document.getElementById('viewFormModal').style.display = 'flex';
         }
-
+        
         // 添加关闭查看弹窗的事件监听
         document.getElementById('closeViewFormButton').addEventListener('click', function() {
             document.getElementById('viewFormModal').style.display = 'none';
